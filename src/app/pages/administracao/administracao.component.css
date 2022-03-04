@@ -1,0 +1,113 @@
+::ng-deep #table-list-adm .table-adm {
+  width: 30px;
+}
+
+::ng-deep #table-list-adm .p-datatable .p-datatable-tbody > tr {
+  background: black !important;
+  color: #e2e3e3;
+  font-size: 12px;
+}
+
+::ng-deep .p-datatable-scrollable .p-datatable-tbody > tr > td {
+  font-size: 8px;
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  display: none;
+}
+
+.card.info-user {
+  border-radius: 5px !important;
+  background: black !important;
+  color: #e9ecef !important;
+  border: 2px solid #2a9fd6;
+}
+
+::ng-deep #balance-block-table,
+::ng-deep #name-block-table {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  color: #e2e3e3;
+  background: #2a9fd6;
+  font-size: 12px;
+}
+
+::ng-deep
+  #table-list-adm
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar {
+  width: 10px;
+}
+
+::ng-deep
+  #table-list-adm
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-track {
+  background: #888;
+}
+
+::ng-deep
+  #table-list-adm
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: black;
+}
+
+::ng-deep
+  #table-list-adm
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::ng-deep .p-tabview .p-tabview-panels {
+  padding: 0px !important;
+}
+
+::ng-deep .table-list-col {
+  word-break: break-word;
+  font-size: 12px;
+}
+::ng-deep.customer-badge.status-pendente {
+  background-color: #ffcdd2;
+  color: #c63737;
+}
+::ng-deep.customer-badge.status-aprovado {
+  background-color: #c8e6c9;
+  color: #256029;
+  font-size: 6px !important;
+}
+
+::ng-deep.customer-badge {
+  border-radius: 2px;
+  padding: 0.25em 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+::ng-deep .p-datatable .p-datatable-header {
+  padding: 0px;
+}
+
+::ng-deep .p-datatable .p-sortable-column .p-sortable-column-icon,
+::ng-deep .p-column-filter-menu-button {
+  color: white !important;
+}
+
+::ng-deep .p-tabview-title {
+  font-size: 10px;
+}
+
+::ng-deep .p-button{
+  font-size: 10px;
+}
+
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link{
+  padding: 15px 10px !important;
+}

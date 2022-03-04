@@ -1,0 +1,34 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.block-currency {
+  background: #2a9fd6;
+  border-radius: 4px;
+}
+
+::ng-deep #convertedField .p-inputnumber-input {
+  cursor: default !important;
+  box-shadow: none !important;
+  background: #333;
+  color: #e9ecef;
+}
+
+::ng-deep #entryField .p-inputnumber-input {
+  box-shadow: none !important;
+  background: #333;
+  color: #e9ecef;
+}
+
+::ng-deep #entryField{
+  position: relative;
+}
+
+::ng-deep #entryField .p-inputnumber::after {
+  content: "\2191";
+  right: 2%;
+  top: 15%;
+  position: absolute;
+  color: #e9ecef;
+}

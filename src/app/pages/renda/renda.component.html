@@ -1,0 +1,686 @@
+<div class="d-flex flex-column flex-sm-row w-100">
+  <div class=" flex-row flex-sm-column">
+    <app-header></app-header>
+  </div>
+  <p-dialog *ngIf="contractStep === -1" header="O Que é Renda Passiva?" [(visible)]="!userApprovedRenda"
+    styleClass="col-sm-6 col-10 h-75" [breakpoints]="{'960px': '90vw'}"
+    [style]="{'background-color': 'gray', 'border': '1px solid #1d9bf0', 'color': '#e9ecef' , 'margin-top': '60px'}"
+    [draggable]="false" [resizable]="true" id="dialog-terms">
+    <div class="d-flex flex-row" id="text-explain">
+      <div class="d-flex flex-column ms-3 me-3 mt-3 termos-renda-passiva-block">
+        <small>
+          Com certeza você já conhece vários tipos de renda passiva, poupança, aluguel de imóveis, dividendos por
+          ações... É um tipo de renda que você recebe sem ter que realizar nenhum esforço.<br>
+          Apresentamos a vocês uma nova forma de renda passiva que consiste em alocação de tokens. Basicamente você
+          aluga seus tokens e recebe no final do período de aluguel uma porcentagem previamente definida.<br>
+          A renda passiva neste caso é o rendimento pago pelo aluguel dos seus tokens através dos planos abaixo:
+        </small>
+        <small class="mt-2">
+          <b><u>Tipos de contratos:</u></b><br>
+          <ul>
+            <li>
+              Contrato de 30 dias = retorno de 30% de rendimento;
+            </li>
+            <li>
+              Contrato de 60 dias = retorno de 70% de rendimento;
+            </li>
+            <li>
+              Contrato de 90 dias = retorno de 100% de rendimento;
+            </li>
+            <li>
+              Contrato de 120 dias = retorno de 150% de rendimento;
+            </li>
+            <li>
+              Contrato de 150 dias = retorno de 200% de rendimento.
+            </li>
+          </ul>
+        </small>
+        <small class="mt-2">
+          As alocações podem ser realizadas em token StakHolders (SH) ou em BNB.
+          Você recebe o rendimento automaticamente em sua carteira 1 dia após o término do período contratado, conforme
+          exemplos abaixo:
+        </small>
+        <small class="mt-2">
+          1. Exemplo: Locação em SH, contrato de 30 dias:<br>
+          Alocação de 100.000 SH = 500$ (conforme cotação do dia da contratação).<br>
+          Ao final do contrato de 30 dias + 1, receberá 150$ em SH de acordo com a cotação do dia da transferência para
+          a carteira do investidor.<br>
+          Rendimento de 150$<br>
+          Cotação da SH = 0,007 (conforme data do término do contrato).<br>
+          Total de SH a ser transferida = 21.428 SH
+        </small>
+        <small class="mt-2">
+          2. Exemplo: Locação em BNB, contrato 30 dias: <br>
+          Alocação de 1 BNB = 500$ (conforme cotação do dia da contratação).<br>
+          Ao final do contrato de 30 dias + 1, receberá 150$ em BNB de acordo com a cotação do dia da transferência para
+          a carteira do investidor.<br>
+          BNB = 550$ (conforme data do término do contrato).<br>
+          Rendimento 150$ = 0,27 BNB
+        </small>
+        <small class="mt-2">
+          <b><u>Taxas</u></b><br>
+          A primeira alocação (SH ou BNB), ou a permanência do seu valor investido inicialmente é isenta de taxa.<br>
+          1. Exemplo: Ao final dos 30 dias + 1, caso você não solicite o seu valor alocado inicialmente, o mesmo será
+          automaticamente reinvestido pelo mesmo período e sem taxa.
+          Para alocar um novo valor ou realocar seu rendimento, será cobrado taxa administrativa de 12% sobre o valor
+          investido.<br>
+          Caso queira encerrar a alocação antecipadamente, receberá seu capital inicial em BNB ou StakHolders (conforme
+          a modalidade que contratou), e será cobrado taxa administrativa de 6%, referente a quebra de contrato.<br>
+          É responsabilidade da Plataforma o pagamento do rendimento do aluguel do token SH ou BNB, 1 dia após o término
+          do prazo contratado.<br>
+          Da atualização do Contrato:<br>
+          Fica estabelecido que o prazo para a solicitação de Atualização do Contrato começa 7 (sete) dias antes da
+          finalização do contrato.<br>
+          Ex1: Se o contrato termina no dia 27/abril, o investidor tem do dia 20 ao 27 de abril para solicitar sua
+          atualização.<br>
+          O valor do novo contrato será calculado no dia que acionar a Atualização do Contrato e no dia 28 de abril
+          inicia este novo contrato com os novos valores.<br>
+          Ex2: Se o contrato termina no dia 30/abril, o investidor tem do dia 23 ao 30 de abril para solicitar sua
+          atualização.<br>
+          O valor do novo contrato será calculado no dia que acionar a Atualização do Contrato e no dia 1º de maio
+          inicia este novo contrato com os novos valores.<br>
+          Os valores do aluguel são calculados no dia do acionamento da Atualização do Contrato que passará a vigorará
+          os novos valores um dia após a finalização do contrato. O cálculo será feito em base no valor do token NO
+          MOMENTO DA ATUALIZAÇÃO DO CONTRATO (dia, hora, minuto e segundo).<br>
+          (Em qualquer caso, o botão sempre vai estar no site mas a funcionalidade só fica disponível dentro do prazo de
+          7 (sete) dias para a finalização do contrato).<br>
+          A atualização do contrato tem o desconto da taxa administrativa de 12% do valor atual alocado.
+          Exemplo prático:<br>
+          Fiz alocação de 100.000 Sh no dia 1 de março a um valor de $0.005 cada SH ($500).<br>
+          No dia 24 de março (dentro do prazo dos 7 dias antes do vencimento do contrato) e tendo em vista que o token
+          está, por exemplo, em $0,01, decido atualizar meu contrato.<br>
+          O contrato segue seu curso normal até o dia 30 de março, no dia 31 de março vou receber 150$ em SH e o
+          contrato vai ser automaticamente atualizado para o valor de 100.000 SH a $0,01 (1000$) - 12% = 880$.<br>
+          Da taxa de 12%:<br>
+          Antes de validar o contrato serão mostradas a seguintes informações:<br>
+          * Valor de seu investimento na Plataforma;<br>
+          * Valor unitário por SH/BNB a depender da moeda alugada;<br>
+          * Valor caso atualizar o contrato decrescido do valor de 12%;<br>
+          * Valor do token no momento da atualização.<br>
+          Para novos contratos na mesma carteira também será cobrada uma taxa de 12%.<br>
+          Retirada é isento de taxa se cumprido o período integral (30, 60, 120 ou 150 dias).<br>
+          Do Cancelamento do Contrato:<br>
+          Caso solicite cancelamento antes do cumprimento do período, incidirá em uma taxa de 30% sobre os tokens
+          alugados e não haverá recebimento do aluguel pelos dias deixados na plataforma, devido à quebra do contrato.
+          A renovação e/ou atualização de um contrato também é considerada como um novo contrato. Contratos vigentes,
+          permanecem inalterados, com a taxa de 6%. Caso sejam renovados e/ou atualizados (manual ou automaticamente), o
+          novo contrato passará ter a taxa de cancelamento ajustada para 30% sobre o valor do contrato.<br>
+          Ex 1.: Alugou 100.000 SH por um período de 30 dias e cancelou o contrato antes de finalizar o período
+          contratado, receberá 70.000 SH.<br>
+          Ex 2.: Alugou 10 BNB por um período de 60 dias e cancelou o contrato antes de finalizar o período contratado,
+          receberá 7 BNB.<br>
+          Fica estabelecido que os termos acima são prerrogativas da StakHolders e que poderão ser alterados a qualquer
+          momento, com informação prévia. Caso a StakHolders, deseje finalizar o contrato, ela pagará o capital alugado
+          e o seu devido aluguel no final do período ou na data que a plataforma encerrar o respectivo contrato.
+        </small>
+        <div class="my-3 d-flex flex-row text-white align-items-center justify-content-center">
+          <p-inputSwitch id="check18Years" [(ngModel)]="userAcceptedTerms"></p-inputSwitch>
+          <label for="check18Years" class="ms-2 w-50" style="font-size: 12px">
+            Declaro ser maior de 18 anos, e compreendo os termos explicativos acima.
+          </label>
+        </div>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <div class="d-flex flex-column justify-content-center align-items-center ">
+        <a (click)="this.userAcceptedTerms ? confirmContractRenda() : ''"
+          [ngClass]="this.userAcceptedTerms ? 'btn-alugar-enabled' :  'btn-alugar-disabled'"><img
+            src="../../../assets/aluguel.svg" style="width: 150px; height: auto;"></a>
+      </div>
+    </ng-template>
+  </p-dialog>
+  <ng-container *ngIf="contractStep >= 0">
+    <div class="d-flex flex-column flex-fill align-items-center" style="margin-top: 60px; height: calc(100vh - 60px)">
+      <div class="d-flex flex-row col-11 col-sm-6 position-relative"
+        style="margin-top: 10px; height: calc(100% - 20px)">
+        <div class="d-flex flex-column w-100 container-box justify-content-center">
+          <ng-container>
+            <div class="container-box-header d-flex justify-content-center align-content-end">
+              <button *ngIf="selectedView === 'allContracts' && contractStep < 20"
+                (click)="msgError = null; inputHash = ''; selectedView = ''" pButton pRipple type="button"
+                class="p-button-rounded p-button-warning p-button-text ms-3 align-self-center" icon="pi pi-arrow-left">
+              </button>
+              <div *ngIf="contractStep > 1" class="d-flex flex-row align-items-center justify-content-start w-50">
+                <div class="d-flex flex-row">
+                  <button *ngIf="contractStep > 2 && contractStep < 5" (click)="contractStep = contractStep - 1" pButton
+                    pRipple type="button" class="p-button-rounded p-button-warning p-button-text ms-3"
+                    icon="pi pi-arrow-left">
+                  </button>
+                  <button *ngIf="contractStep === 2"
+                    (click)="contractStep = 0; selectedView = ''; userApprovedRenda = false; userAcceptedTerms = false"
+                    pButton pRipple type="button" class="p-button-rounded p-button-warning p-button-text ms-3"
+                    icon="pi pi-arrow-left">
+                  </button>
+                  <button *ngIf="contractStep === 5"
+                    (click)="contractStep = contractStep - 1; msgError = null; inputHash = ''" pButton pRipple
+                    type="button" class="p-button-rounded p-button-warning p-button-text ms-3" icon="pi pi-arrow-left">
+                  </button>
+                  <button *ngIf="contractStep == 21" (click)="contractStep = contractStep - 1; this.clearContract()"
+                    pButton pRipple type="button" class="p-button-rounded p-button-warning p-button-text ms-3"
+                    icon="pi pi-arrow-left">
+                  </button>
+                </div>
+              </div>
+              <div class="d-flex flex-row align-items-center justify-content-end w-100">
+                <div class="d-flex flex-row">
+                  <button routerLink="/home" pButton pRipple type="button"
+                    class="p-button-rounded p-button-warning p-button-text" icon="pi pi-home">
+                  </button>
+                  <button routerLink="/profile" pButton pRipple type="button"
+                    class="p-button-rounded p-button-warning p-button-text" icon="pi pi-user">
+                  </button>
+                </div>
+                <div class="d-flex flex-row">
+                  <button (click)="clearContract()" pButton pRipple type="button"
+                    class="p-button-rounded p-button-danger p-button-text me-3" icon="pi pi-times">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div *ngIf="contractStep === 0" class="d-flex flex-column align-items-center mt-2"
+            style="border-bottom: 1px solid rgb(231, 227, 235);">
+            <ng-container *ngIf="!selectedView">
+              <div class="d-flex flex-column">
+                <img src="../../../assets/novocontrato.png" style="width: auto; height: 80px; cursor: pointer;"
+                  (click)="contractStep = -1">
+                <img src="../../../assets/meuscontratos.png" style="width: auto; height: 80px; cursor: pointer;"
+                  (click)="selectedView = 'allContracts'; this.getReportFromContracts()">
+              </div>
+            </ng-container>
+            <ng-container *ngIf="selectedView === 'allContracts'">
+              <p-table class="" [paginator]="true" [rows]="1" [totalRecords]="this.reportContractsData?.length"
+                scrollHeight="flex" class="w-100"
+                [style]="{'z-index': '0', 'height': 'calc(100vh - 200px)', 'width': '100%' , 'border-radius':'4px','font-size':'12px','margin': '0px'}"
+                [scrollable]="true" [value]="reportContractsData">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Campo</th>
+                    <th>Informação</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-contract>
+                  <tr>
+                    <td>Periodo</td>
+                    <td>{{contract.periodo}}</td>
+                  </tr>
+                  <tr>
+                    <td>Token</td>
+                    <td>{{contract.modalidade | uppercase}}</td>
+                  </tr>
+                  <tr>
+                    <td>Quantidade Alugada</td>
+                    <td>{{contract.quantidade_compra_usuario}}</td>
+                  </tr>
+                  <tr *ngIf="contract.status !=='solicitado-cancelamento' && contract.status !=='pago-cancelamento'">
+                    <td>Valor pela Quantidade</td>
+                    <td>{{contract.valor_quantidade | currency}}</td>
+                  </tr>
+                  <tr *ngIf="contract.status !=='solicitado-cancelamento' && contract.status !=='pago-cancelamento'">
+                    <td>Valor Percentual pelo Aluguel</td>
+                    <td>{{contract.total_pelo_aluguel | currency}}</td>
+                  </tr>
+                  <tr *ngIf="contract.status !=='solicitado-cancelamento' && contract.status !=='pago-cancelamento'">
+                    <td>Valor Total pelo Aluguel</td>
+                    <td>{{contract.total_recebiveis_aluguel | currency}}</td>
+                  </tr>
+                  <tr *ngIf="contract.status ==='solicitado-cancelamento' || contract.status ==='pago-cancelamento'">
+                    <td>Quantidade a receber pelo Cancelamento</td>
+                    <td>{{contract.total_pelo_cancelamento}}</td>
+                  </tr>
+                  <tr>
+                    <td>Hash</td>
+                    <td style="line-break: anywhere;">{{contract.hash}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td>Inicio do Contrato</td>
+                    <td>{{contract.data_incio?.toDate() | date}}</td>
+                  </tr> -->
+                  <tr>
+                    <td>Fim do Contrato</td>
+                    <td>{{contract.data_fim | date}}</td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td style="text-transform: uppercase;">{{contract.status}}</td>
+                  </tr>
+                  <tr
+                    *ngIf="!contract.status?.includes('cancelado') && !contract.status?.includes('resgatado') && !contract.status?.includes('pago') && !contract.status?.includes('solicitado-cancelamento')  && !contract.status?.includes('pago') ">
+                    <td class="justify-content-center">
+                      <a class="mx-2 d-flex flex-column"
+                        title="Disponivel 7 dias antes do fim do contrato, até a data do termino"
+                        style="text-decoration: none;"
+                        (click)="verifyContractPeriod(contract) ? updateContract(contract) : ''"
+                        [ngClass]="verifyContractPeriod(contract) ? 'btn-alugar-enabled' : 'btn-alugar-disabled'">
+                        <img src="../../../assets/atualizar.png" style="width: auto; height: 50px;">
+                      </a>
+                      <a class="mx-2"
+                        (click)="(contract.status?.includes('cancelado') || contract.status?.includes('resgatado') ) ? '' : goToResgate(contract)"
+                        [ngClass]="(contract.status?.includes('cancelado') || contract.status?.includes('resgatado') )  ? 'btn-alugar-disabled' : 'btn-alugar-enabled'">
+                        <img style="width: auto; height: 45px;" src="../../../assets/resgatecancelamento.png">
+                      </a>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </ng-container>
+            <ng-container *ngIf="selectedView === 'newContract'">
+              <h5 style="font-size: 16px;"><b>Escolha um Token</b></h5>
+              <p-dropdown [options]="tokensOptions" [style]="{background: 'transparent', border: 'none'}"
+                [(ngModel)]="selectedToken" optionLabel="name" (onChange)="filterCotation()" [showClear]="true"
+                placeholder="Selecionar">
+                <ng-template pTemplate="selectedItem">
+                  <div class="d-flex flex-row" *ngIf="selectedToken">
+                    <img height="20" *ngIf="selectedToken.code?.toLowerCase() ==='stakholders'"
+                      src="../../../assets/shicon.png" />
+                    <img height="20" *ngIf="selectedToken.code?.toLowerCase() ==='bnb'"
+                      src="../../../assets/bnbicon.png" />
+                    <div class="ms-2" style="font-size: 14px;font-weight: bold;">{{selectedToken.name}}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-token pTemplate="item">
+                  <div class="d-flex flex-row">
+                    <div class="d-flex flex-column" style="width: 20px;">
+                      <img height="20" *ngIf="token.code?.toLowerCase() ==='stakholders'"
+                        src="../../../assets/shicon.png" />
+                      <img height="20" *ngIf="token.code?.toLowerCase() ==='bnb'" src="../../../assets/bnbicon.png" />
+                    </div>
+                    <div class="ms-3" style="font-size: 14px; font-weight: bold;">{{token.name}}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+          </div>
+          <ng-container *ngIf="contractStep === 2">
+            <div class="d-flex flex-column" style="padding: 10px;border-bottom: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 style="font-size: 14px;"><b>Selecione a periodicidade</b></h5>
+                  <div class="d-flex flex-row">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/30d.svg"
+                      (click)="this.bonusPercentPeriodicity = 0.3; this.selectedRentPeriodicity = 30; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/60d.svg"
+                      (click)="this.bonusPercentPeriodicity = 0.7; this.selectedRentPeriodicity = 60; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/90d.svg"
+                      (click)="this.bonusPercentPeriodicity = 1.0; this.selectedRentPeriodicity = 90; openRentPeriodicityDialog()">
+                  </div>
+                  <div class="d-flex flex-row justify-content-center">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/120d.svg"
+                      (click)="this.bonusPercentPeriodicity = 1.5; this.selectedRentPeriodicity = 120; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/150d.svg"
+                      (click)="this.bonusPercentPeriodicity = 2.0; this.selectedRentPeriodicity = 150; openRentPeriodicityDialog()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 3 ">
+            <div class="d-flex flex-column" style="padding: 10px;">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 style="font-size: 14px;"><b>Insira a quantidade a ser alugada</b></h5>
+                  <div class="d-flex input-container align-content-center justify-content-center">
+                    <p-inputNumber [style]="{'flex-direction': 'row-reverse'}" (onInput)="convertCurrency($event)"
+                      [(ngModel)]="inputQuantityTokens" styleClass="input-quantity" autocomplete="off" placeholder="0.0"
+                      autocorrect="off" spellcheck="false" mode="decimal" [minFractionDigits]="2"
+                      [maxFractionDigits]="18" title="Quantidade Alugada">
+                    </p-inputNumber>
+                    <button pButton pRipple type="button" class="p-button-rounded p-button-danger p-button-text"
+                      icon="pi pi-info-circle" pTooltip="Lembre-se, adicionar casas decimais após a virgula.">
+                    </button>
+                  </div>
+                  <ng-container *ngIf="this.quantityInsufficient">
+                    <div class="d-flex flex-row mt-2">
+                      <small><b class="text-label-description">Quantidade Minima:</b>
+                        10.000 SH</small>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!this.quantityInsufficient">
+                    <div class="d-flex flex-row mt-2">
+                      <small><b class="text-label-description">Cotação:</b>
+                        {{(this.selectedToken?.code?.toLowerCase() === 'stakholders' )?
+                        'US$ ' + this.cotacaoValoresSHUSD : this.cotacaoValoresBNBUSD | currency}}</small>
+                    </div>
+                    <div class="d-flex flex-row">
+                      <small><b class="text-label-description">Percentual Sobre Aluguel:</b>
+                        {{this.bonusPercentPeriodicity | percent}}</small>
+                    </div>
+                    <div class="d-flex flex-row mt-2">
+                      <small><b class="text-label-description">Valor pela Quantidade:</b>
+                        {{ inputQuantityUsd | currency}}</small>
+                    </div>
+                    <div class="d-flex flex-row">
+                      <small><b class="text-label-description">Valor Percentual pelo Aluguel:</b>
+                        {{ valueDifference | currency}}</small>
+                    </div>
+                    <div class="d-flex flex-row mb-3">
+                      <small><b class="text-label-description">Valor Total pelo Aluguel US$:</b>
+                        {{ totalValue | currency}}</small>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 3">
+            <div class="d-flex flex-column" style="border-top: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-6">
+                  <ng-container *ngIf="!this.quantityInsufficient">
+                    <div class="d-flex flex-row mt-5">
+                      <button class="btn-proximo" (click)="contractStep = 4">Próximo</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 4 ">
+            <div class="d-flex flex-column" style="padding: 10px;">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <ng-container>
+                    <h5 class="mt-3" style="font-size: 14px;"><b>Dados do Contrato</b></h5>
+                    <div style="place-self: center; width: fit-content;">
+                      <div class="ms-3 d-flex flex-row ">
+                        <small><b class="text-label-description">Token Selecionado:</b>
+                          {{ selectedToken?.name}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Cotação: </b>US$
+                          <span *ngIf="selectedToken?.code === 'Stakholders'">{{cotacaoValoresSHUSD}}</span>
+                          <span *ngIf="selectedToken?.code === 'Bnb'">{{cotacaoValoresBNBUSD}}</span>
+                        </small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Quantidade Alugada:</b>
+                          {{ inputQuantityTokens | number}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Valor pela Quantidade:</b>
+                          {{ inputQuantityUsd | currency}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Valor Percentual pelo Aluguel:</b>
+                          {{ valueDifference | currency}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row mb-3">
+                        <small><b class="text-label-description">Valor Total pelo Aluguel US$:</b>
+                          {{ totalValue | currency}}</small>
+                      </div>
+                    </div>
+                    <h5 style="font-size: 14px;"><b>Envie a quantidade ({{inputQuantityTokens | number}}) para a
+                        Carteira:</b>
+                    </h5>
+                  </ng-container>
+                  <div style="place-self: center;"
+                    class="d-flex input-container align-content-center justify-content-center">
+                    <label style="font-size: 12px;"
+                      class="align-self-center">0x8d151d900FC5C85Ea7b032cD5DEAC0C2C577240a</label>
+                    <button cdkCopyToClipboard="0x8d151d900FC5C85Ea7b032cD5DEAC0C2C577240a" pButton pRipple
+                      type="button" class="p-button-rounded p-button-primary p-button-text" icon="pi pi-copy"
+                      pTooltip="Clique para copiar.">
+                    </button>
+                  </div>
+                  <div class="col-10" style="place-self: center;">
+                    <h5 style="font-size: 10px;" class="mt-2"><b>Só são aceitas transferências via Metamask ou
+                        Trustwallet. Valores enviados na plataforma abaixo de 10.000,00 SH e
+                        abaixo de 0.1 BNB, não serão devolvidos. Certifique da quantidade a ser enviada ser igual ou
+                        maior que 10.000,00
+                        SH ou 0.1 BNB.</b>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column" style="border-top: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-6">
+                  <ng-container>
+                    <div class="d-flex flex-row mt-2">
+                      <button class="btn-proximo" (click)="contractStep = 5">Próximo</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 5 ">
+            <div class="d-flex flex-column" style="padding: 10px;">
+              <div class="d-flex flex-column justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 style="font-size: 14px;"><b>Dados do Contrato</b></h5>
+                  <ng-container>
+                    <div class="d-flex flex-column" style="width: fit-content; place-self: center;">
+                      <div class="d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Token Selecionado:</b>
+                          {{ selectedToken?.name}}</small>
+                      </div>
+                      <div class="d-flex flex-row">
+                        <small><b class="text-label-description">Cotação: </b>US$
+                          <span *ngIf="selectedToken?.code === 'Stakholders'">{{cotacaoValoresSHUSD}}</span>
+                          <span *ngIf="selectedToken?.code === 'Bnb'">{{cotacaoValoresBNBUSD}}</span>
+                        </small>
+                      </div>
+                      <div class="d-flex flex-row">
+                        <small><b class="text-label-description">Quantidade Alugada:</b>
+                          {{ inputQuantityTokens | number}}</small>
+                      </div>
+                      <div class="d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Valor pela Quantidade:</b>
+                          {{ inputQuantityUsd | currency}}</small>
+                      </div>
+                      <div class="d-flex flex-row">
+                        <small><b class="text-label-description">Valor Percentual pelo Aluguel:</b>
+                          {{ valueDifference | currency}}</small>
+                      </div>
+                      <div class="d-flex flex-row mb-3">
+                        <small><b class="text-label-description">Valor Total pelo Aluguel US$:</b>
+                          {{ totalValue | currency}}</small>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <h5 style="font-size: 14px;"><b>Insira Hash da Transação</b></h5>
+                  <div class="d-flex flex-column">
+                    <div class="d-flex input-container align-content-center justify-content-center col-10"
+                      style="place-self: center;">
+                      <input type="text" pInputText [style]="{'flex-direction': 'row-reverse'}" [(ngModel)]="inputHash"
+                        class="input-hash" placeholder="Inserir Hash" title="Hash da Transação">
+                    </div>
+                    <button *ngIf="!hashVerified" (click)="verifyHashTransaction()" pButton pRipple
+                      style="overflow: inherit; width: fit-content;" type="button"
+                      class="p-button-outlined p-button-rounded ms-2 mt-2 align-self-center" label="Verificar"
+                      pTooltip="Verifique a hash para continuar.">
+                    </button>
+                  </div>
+                  <div *ngIf="hashVerified" class="d-flex flex-row mt-2 text-center justify-content-center">
+                    <button disabled pButton pRipple style="overflow: inherit;" label="Hash Verificada" type="button"
+                      icon="pi pi-check" class="p-button-rounded p-button-text p-button-success">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="msgError" class="d-flex flex-column col-10"
+              style="border-top: 1px solid rgb(231, 227, 235); place-self: center;">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-12">
+                  <ng-container>
+                    <div class="d-flex flex-row w-100 mt-3">
+                      <h5 style="font-size: 14px;"><b>{{msgError}}</b></h5>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="hashVerified" class="d-flex flex-column" style="border-top: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-6">
+                  <ng-container>
+                    <div class="d-flex flex-row mt-3 px-1">
+                      <button [disabled]="!hashVerified"
+                        [title]="!hashVerified? 'Verifique a Hash para Continuar.' : 'Concluir Contrato.'"
+                        class="btn-proximo" (click)="contractStep = 6">Próximo</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 6 ">
+            <div class="d-flex flex-column" style="padding: 10px;">
+              <div class="d-flex flex-column justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 style="font-size: 14px;"><b>Resumo</b></h5>
+                  <ng-container>
+                    <div class="d-flex flex-column" style="width: fit-content; place-self: center;">
+                      <div class="d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Token Selecionado:</b>
+                          {{ selectedToken?.name}}</small>
+                      </div>
+                      <div class="d-flex flex-row">
+                        <small><b class="text-label-description">Quantidade Alugada:</b>
+                          {{ inputQuantityTokens }}</small>
+                      </div>
+                      <div class="d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Valor pela Quantidade:</b>
+                          {{ inputQuantityUsd | currency}}</small>
+                      </div>
+                      <div class="d-flex flex-row">
+                        <small><b class="text-label-description">Valor Percentual pelo Aluguel:</b>
+                          {{ valueDifference | currency}}</small>
+                      </div>
+                      <div class="d-flex flex-row mb-3">
+                        <small><b class="text-label-description">Valor Total pelo Aluguel US$:</b>
+                          {{ totalValue | currency}}</small>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column" style="border-top: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-6">
+                  <ng-container>
+                    <div class="d-flex flex-row mt-3 px-1">
+                      <button class="btn-proximo" (click)="sendPurchaseData()">Confirmar</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 20">
+            <div class="d-flex flex-column" style="padding: 10px;border-bottom: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 style="font-size: 14px;"><b>Selecione a periodicidade</b></h5>
+                  <div class="d-flex flex-row">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/30d.svg"
+                      (click)="this.bonusPercentPeriodicity = 0.3; this.selectedRentPeriodicity = 30; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/60d.svg"
+                      (click)="this.bonusPercentPeriodicity = 0.7; this.selectedRentPeriodicity = 60; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/90d.svg"
+                      (click)="this.bonusPercentPeriodicity = 1.0; this.selectedRentPeriodicity = 90; openRentPeriodicityDialog()">
+                  </div>
+                  <div class="d-flex flex-row justify-content-center">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/120d.svg"
+                      (click)="this.bonusPercentPeriodicity = 1.5; this.selectedRentPeriodicity = 120; openRentPeriodicityDialog()">
+                    <img class="me-2 button-renda" style="width: 6rem; height: fit-content; display: flex;"
+                      src="../../../assets/150d.svg"
+                      (click)="this.bonusPercentPeriodicity = 2.0; this.selectedRentPeriodicity = 150; openRentPeriodicityDialog()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="contractStep === 21 ">
+            <div class="d-flex flex-column" style="padding: 10px;">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center">
+                  <h5 class="mt-3" style="font-size: 14px;"><b>Dados do Contrato</b></h5>
+                  <ng-container>
+                    <div style="place-self: center; width: fit-content;">
+                      <div class="ms-3 d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Token Selecionado:</b>
+                          {{ updateObjContract?.modalidade | uppercase}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Periodo:</b>
+                          {{ updateObjContract?.periodo}} Dias</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Cotação: </b>US$
+                          <span *ngIf="updateObjContract.modalidade === 'Stakholders'">{{cotacaoValoresSHUSD}}</span>
+                          <span *ngIf="updateObjContract.modalidade === 'Bnb'">{{cotacaoValoresBNBUSD}}</span>
+                        </small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Quantidade Alugada:</b>
+                          {{ updateObjContract?.quantidade_compra_usuario | number}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Taxa Sobre Valores (12%):</b>
+                          {{ taxaDescontoAtualizacao | currency}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row mt-2">
+                        <small><b class="text-label-description">Valor pela Quantidade:</b>
+                          {{ updateObjContract?.valor_quantidade | currency}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row">
+                        <small><b class="text-label-description">Valor Percentual pelo Aluguel:</b>
+                          {{ updateObjContract?.total_pelo_aluguel | currency}}</small>
+                      </div>
+                      <div class="ms-3 d-flex flex-row mb-3">
+                        <small><b class="text-label-description">Valor Total pelo Aluguel US$:</b>
+                          {{ updateObjContract?.total_recebiveis_aluguel | currency}}</small>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-column" style="border-top: 1px solid rgb(231, 227, 235);">
+              <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-column text-center col-6">
+                  <ng-container>
+                    <div class="d-flex flex-row mt-2">
+                      <button (click)="updateNewContract()" class="btn-proximo">Confirmar</button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="d-flex flex-row" id="box-suporte">
+          <a style="text-decoration: none;" href="https://t.me/albqqdev" target="_blank">
+            <p-button styleClass="p-button-raised p-button-text"
+              [style]="{'padding': '3px 15px', 'border-radius': '5px', 'box-shadow': 'none'}">
+              <img alt="logo" src="../../../assets/shicon.png" style="width: 0.5rem" />
+              <span class="ms-3" style="font-size: 0.7rem;">Suporte Técnico</span>
+            </p-button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<p-messages [style]="{'z-index': '999999999999999', 'position': 'fixed', 'bottom': '5%', 'right': '5%'}" [value]="msgs">
+</p-messages>
+
+<ng-container #loadingScreen *ngIf="showLoading">
+  <div class="loadingScreen">
+    <img style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;" src="../assets/loading.gif">
+  </div>
+</ng-container>

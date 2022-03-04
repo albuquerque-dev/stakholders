@@ -1,0 +1,179 @@
+<div class="d-flex flex-column flex-sm-column w-100">
+  <div class="content flex-row flex-sm-row" style="height: 60px;">
+    <app-header></app-header>
+  </div>
+  <div class="d-flex flex-column w-100 justify-items-center align-items-center" style="height: calc(100vh - 60px)">
+    <div id="content-area-home"
+      class="d-flex flex-column align-content-center justify-content-center align-items-center">
+      <!-- <h1 class="display-1 text-white">Em Construção</h1> -->
+      <div class="h-100 w-100 d-flex flex-column flex-sm-row">
+        <div class="double-columns d-flex flex-column h-100 flex-sm-column ms-sm-3">
+          <div class="d-flex flex-column flex-sm-row mt-3">
+            <div class="d-flex w-100 w-sm-50 mt-3 mt-sm-0 flex-column chart-area ">
+              <div class="d-flex flex-row w-100 container-title justify-content-between">
+                <h4 style="cursor: pointer;" class="ps-3">Carteira</h4>
+                <small class="text-white text-end align-self-center me-2"></small>
+              </div>
+              <div class="text-end h-100 d-flex" style="border-top: 2px solid #2a9fd6;">
+                <small
+                  class="text-white  align-self-center justify-self-end ms-3 me-1">{{this.userInfo?.carteira}}</small>
+              </div>
+            </div>
+            <div class="d-flex w-100 w-sm-50 flex-column flex-fill mt-3 mt-sm-0">
+              <!-- <div class="d-flex flex-row w-100 container-title justify-content-between">
+              <h4 class="ps-3">Saldo</h4>
+            </div> -->
+              <div class="d-flex flex-column h-100">
+                <div
+                  class="d-flex py-1 flex-row align-items-center justify-content-between chart-area flex-fill ms-sm-3 p-0">
+                  <img class="ms-2" src="../../../assets/shicon.png" style="width: 30px; height: 30px;" alt="">
+                  <small class=" text-white text-end">{{userBalance.SH?.balance | number}}</small>
+                  <small class="text-white">{{userBalance.SH?.quote | currency}}</small>
+                  <small class="text-white me-2">{{userBalance.SH?.quote_rate_24h | percent:'.2'}}(24h)</small>
+                </div>
+                <div
+                  class="d-flex py-1 mt-1 flex-row align-items-center justify-content-between chart-area flex-fill ms-sm-3 p-0">
+                  <img class="ms-2" src="../../../assets/bnb.svg" style="width: 30px; height: 30px;" alt="">
+                  <small class=" text-white text-end">{{userBalance.BNB?.balance | number}}</small>
+                  <small class="text-white">{{userBalance.BNB?.quote | currency}} </small>
+                  <small class="text-white me-2">{{userBalance.BNB?.quote_rate_24h | percent:'.2'}}(24h)</small>
+                </div>
+              </div>
+              <!-- TradingView Widget END -->
+            </div>
+          </div>
+          <div class="d-flex flex-column mb-3">
+            <div class="d-flex flex-row chart-area mt-3">
+              <div class="d-flex  my-2 flex-column w-50 align-items-center justify-content-center">
+                <div class="d-flex flex-column text-white">
+                  <img src="../../../assets/shicon.png" style="width: 100px; height: auto;">
+                </div>
+                <div class="d-flex flex-column text-white justify-content-center ms-3">
+                  <div class="d-flex flex-row text-white">
+                    <b class="me-2">Rank</b> #{{this.coinStats?.data[17031]?.cmc_rank}}
+                  </div>
+                  <div class="d-flex flex-row text-white">
+                    <b class="me-2">Volume</b> {{this.coinStats?.data[17031]?.quote[2781]?.volume_24h | currency}}
+                  </div>
+                  <div class="d-flex flex-row text-white">
+                    <b class="me-2">Preço</b> US$ {{this.coinStats?.data[17031]?.quote[2781]?.price | number}}
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column w-50">
+                <h4 style="color: #e9ecef;
+                font-weight: 300 !important;
+                border-left: 5px solid #2a9fd6;
+                margin-bottom: 5px;
+                margin-top: 10px;" class="ps-3">Variação <small>(%)</small></h4>
+                <div class="d-flex flex-column h-100 position-relative">
+                  <div class="d-flex d-sm-none flex-column text-white justify-content-center">
+                    <div class="d-flex flex-row">
+                      <small class="me-2"><b>1H:</b></small>
+                      {{this.variationRate.oneHour | number: '1.2-2'}}%
+                    </div>
+                    <div class="d-flex flex-row">
+                      <small class="me-2"><b>1D:</b></small>
+                      {{this.variationRate.oneDay | number: '1.2-2'}}%
+                    </div>
+                    <div class="d-flex flex-row">
+                      <small class="me-2"><b>1S:</b></small>
+                      {{this.variationRate.sevenDay | number: '1.2-2'}}%
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <p-chart width="40w" height="30vh" id="donut-percent" class="mb-2" [options]="dataToGraph?.options"
+                      type="doughnut" [data]="dataToGraph"></p-chart>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex d-sm-flex flex-column chart-area">
+            <div class="d-flex flex-row w-100 container-title">
+              <h4 class="ps-3 py-1">Conversor</h4>
+            </div>
+            <div class="d-flex flex-row mt-3" style="border-top: 2px solid #2a9fd6;">
+              <app-converter></app-converter>
+            </div>
+          </div>
+        </div>
+        <div class="single-column d-flex flex-column ms-sm-3 h-100 h-sm-100">
+          <div class="d-none d-sm-flex flex-column w-100 my-3 chart-area h-100 h-sm-50 card-graph">
+            <div class="d-flex flex-row w-100 container-title">
+              <h4 class="ps-3 py-1">Contratos Renda Passiva [QTD.]</h4>
+            </div>
+            <div class="d-flex mt-2 d-sm-flex flex-column align-items-center justify-content-center w-100 h-100"
+              style="border-top: 2px solid #2a9fd6;">
+              <app-radar [dataContracts]="contractsDatareport">
+              </app-radar>
+            </div>
+          </div>
+          <div class="d-flex flex-column w-100 chart-area h-100 h-sm-50 card-graph mt-3 mt-sm-0">
+            <div class="d-flex flex-row w-100 container-title">
+              <h4 class="ps-3 py-1">Total Renda Passiva [US$]</h4>
+            </div>
+            <div class="d-flex mt-2 d-sm-flex flex-column align-items-center justify-content-center w-100 h-100"
+              style="border-top: 2px solid #2a9fd6;">
+              <app-spider [dataContracts]="dataToRadarChart">
+              </app-spider>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-row w-100">
+        <div class="d-flex flex-column w-100 flex-sm-column mx-sm-3">
+          <div class="d-flex flex-column flex-sm-row chart-area mt-3 mb-3">
+            <div class="d-flex flex-column w-100">
+              <p-tabView>
+                <p-tabPanel header="Carteira">
+                  <p-table id="table-walet-result" styleClass="table-walet-result" [value]="this.userWalletData"
+                    [scrollable]="true" scrollHeight="flex" [style]="{'z-index': '0', 'height': '61.6vh'}">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Token</th>
+                        <th>Saldo</th>
+                        <th>Variação (24H)</th>
+                        <th>Quantidade</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-wallet>
+                      <tr>
+                        <td id="name-block-table">{{wallet.contract_name}}</td>
+                        <td>{{wallet.quote | currency}}</td>
+                        <td>{{wallet.quote_rate_24h | percent}}</td>
+                        <td id="balance-block-table">{{+wallet.balance.slice(0, +wallet.contract_decimals) | number:
+                          '1.0-4'}}</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </p-tabPanel>
+                <p-tabPanel header="Transações">
+                  <p-table id="table-walet-result" styleClass="table-walet-result" [value]="this.hashtransactions"
+                    [scrollable]="true" scrollHeight="flex" [style]="{'z-index': '0', 'height': '61.6vh'}">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Token</th>
+                        <th>Remetente</th>
+                        <th>Quantidade</th>
+                        <th>Destinatario</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-wallet>
+                      <tr>
+                        <td style="font-size: 10px;" id="name-block-table">{{wallet.tokenName}}</td>
+                        <td style="font-size: 10px;">{{wallet.from}}</td>
+                        <td style="font-size: 10px;">{{wallet.value.slice(0, -wallet.tokenDecimal) | number}}</td>
+                        <td style="font-size: 10px;">{{wallet.to}}</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </p-tabPanel>
+              </p-tabView>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="d-flex flex-column flex-sm-row w-100">
+  <div class="content flex-row flex-sm-row" style="height: 60px;">
+    <app-header></app-header>
+  </div>
+  <div class="d-flex flex-column">
+    <div style="height: calc(100vh - 60px);"
+      class="d-flex flex-column align-content-center justify-content-center align-items-center">
+      <!-- <h1 class="display-1 text-white">Em Construção</h1> -->
+      <div id="content-area-home" class="h-100 d-flex flex-column">
+        <div class="d-flex flex-column flex-sm-row mt-3">
+          <div class="d-flex flex-column flex-fill ms-sm-3 ms-3 me-3 me-sm-2 h-100 chart-area">
+            <div class="d-flex flex-row w-100 container-title justify-content-between">
+              <h4 class="ps-3">Saldo</h4>
+            </div>
+            <div class="w-100 h-100 d-flex flex-row" style="border-top: 1px solid #2a9fd6;">
+              <div class="d-flex flex-row w-50 justify-content-center">
+                <small class="ms-3 text-white text-end me-2 mt-1">{{userBalance.SH?.quote | currency}}</small>
+                <small class="text-white text-end align-self-center me-2 mt-1">SH</small>
+              </div>
+              <div class="d-flex flex-row w-50 justify-content-center" style="border-left: 1px solid #2a9fd6;">
+                <small class="ms-3 text-white text-end me-2 mt-1">{{userBalance.BNB?.quote | currency}}</small>
+                <small class="text-white text-end align-self-center me-2 mt-1">BNB</small>
+              </div>
+            </div>
+            <!-- TradingView Widget END -->
+          </div>
+          <div class="d-flex mt-3 mt-sm-0 flex-column flex-fill me-sm-5 me-3 ms-3 ms-sm-2 h-100 chart-area ">
+            <div class="d-flex flex-row w-100 container-title justify-content-between">
+              <h4 class="ps-3">Carteira</h4>
+              <small class="text-white text-end align-self-center me-2"></small>
+            </div>
+            <div class="w-100 h-100 text-end" style="border-top: 1px solid #2a9fd6;">
+              <small class="text-white justify-self-end mt-1 me-3">{{this.userInfo?.carteira}}</small>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column flex-sm-row ">
+          <div class="d-flex flex-column mt-3 ms-3 me-3 me-sm-3 me-sm-0">
+            <div class="d-flex flex-row">
+              <div id="coinStats" class="coinmarketcap-currency-widget w-100" data-currencyid="17031" data-base="USD"
+                data-secondary="" data-ticker="false" data-rank="true" data-marketcap="false" data-volume="true"
+                data-statsticker="true" data-stats="USD"></div>
+            </div>
+            <div class="d-none flex-row mt-3 ms-sm-0 me-3 me-sm-0"
+              style="border: 1px solid #2a9fd6; border-radius: 4px;">
+              <app-converter></app-converter>
+            </div>
+          </div>
+          <div class="d-none d-sm-flex flex-column flex-fill ms-3 ms-sm-0 me-5 mt-3 chart-area">
+            <div class="d-flex flex-row w-100 container-title">
+              <h4 class="ps-3 py-1">Chart</h4>
+            </div>
+            <div id="pancakeGraph" class="tradingview-widget-container w-100 h-100">
+              <!-- <div class="d-flex flex-row"> -->
+              <div id="bnbChart" #tradingView class="d-flex flex-column h-100 w-100"></div>
+              <!-- <div class="nomics-ticker-widget" data-theme="dark" data-size="responsive" data-name="PancakeSwap"
+                  data-base="SH3" data-quote="BNB"></div> -->
+              <!-- </div> -->
+              <!-- <div class="d-flex flex-row"> -->
+              <!-- <div class="nomics-ticker-widget " data-name="PancakeSwap" data-base="USDT" data-quote="BNB"></div> -->
+              <!-- </div> -->
+              <!-- <div id="tradingview_e652e" class="d-flex flex-column h-100 w-100"></div> -->
+              <!-- TradingView Widget BEGIN -->
+            </div>
+            <!-- TradingView Widget END -->
+          </div>
+        </div>
+        <!-- <div class="d-flex flex-column flex-fill mx-5 mt-3 chart-area">
+          <div class="d-flex flex-row w-100 container-title">
+            <h4 class="ps-3 py-1">Chart</h4>
+          </div>
+          <div class="tradingview-widget-container w-100 h-100">
+            <div class="nomics-ticker-widget" data-name="PancakeSwap" data-base="BNB" data-quote="USDT"></div>
+            <div id="bnbChart" class="d-none flex-column h-100 w-100"></div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container #loadingScreen *ngIf="showLoading">
+  <div class="loadingScreen">
+    <img style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;" src="../assets/loading.gif">
+  </div>
+</ng-container>

@@ -1,0 +1,158 @@
+<nav class="navbar navbar-dark bg-black p-0" style="height: 60px; width: 100%; z-index: 999999; position: fixed;">
+  <div class="container-fluid">
+    <a style="color: #e9ecef;" class="p-0 m-0 navbar-brand d-flex align-items-center" href="#">
+      <img src="../../assets/logo-metalico.png" height="60" class="d-inline-block align-text-top">
+      <!-- StakHolders -->
+    </a>
+    <div class="d-flex flex-row justify-content-center">
+      <small class="align-self-center me-2" style="color: #e9ecef;">Olá, <a title="Ver Perfil"
+          style="text-decoration: none; color: #f3ba2f;" routerLink="/profile">{{this.userInfo?.nome}}</a>
+        <a class="ms-2" style="cursor: pointer; color: #2a9fd6; text-decoration: none;"
+          (click)="logoutUser()">(Sair)</a></small>
+      <button class="btn btn-link bd-search-docs-toggle d-sm-flex p-0 me-3" type="button" data-bs-toggle="collapse"
+        data-bs-target="#menu-home-nav" aria-expanded="false" aria-controls="menu-home-nav"><svg
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false">
+          <title>Menu</title>
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10"
+            d="M4 7h22M4 15h22M4 23h22"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<div id="menu-home-nav" class="collapse">
+  <div class="d-flex flex-row justify-content-end"
+    style="width: 250px; top: 60px; right: 0; position: fixed; height: 100vh; z-index: 999999999999; color: #e9ecef; background: black;">
+    <div class="d-flex flex-column w-100 mw-100">
+      <a class="d-flex align-content-center justify-content-center mb-2 mb-lg-0 text-decoration-none">
+        <img src="../../assets/logo-metalico.png" style="height: 150px; width: auto">
+      </a>
+      <ul class="d-flex mt-3 flex-column nav  justify-content-center align-content-center">
+        <li>
+          <a style="cursor: pointer;" routerLink="/home" class=" p-0 nav-link d-flex flex-row align-items-center">
+            <img src="../../assets/home.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li>
+        <!-- <i class="pi pi-home me-2"></i> Home</a> -->
+        <li style="margin-top: -10px;">
+          <a style="cursor: pointer;" (click)="messageBoxLaunch()" class="nav-link p-0 d-flex flex-row align-items-center">
+            <img src="../../assets/daily-task.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li>
+        <!-- routerLink="/renda-passiva" -->
+        <li style="margin-top: -10px;">
+          <a routerLink="/renda" class="nav-link p-0 d-flex flex-row align-items-center">
+            <img src="../../assets/renda-passiva.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li>
+        <li style="margin-top: -10px;">
+          <a href="http://pix.stakholders.app.br/" target="_blank" style="cursor: pointer;" class="p-0 nav-link d-flex flex-row align-items-center">
+            <img src="../../assets/comprar.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li>
+        <!-- <li style="margin-top: -10px;">
+          <a (click)="messageBoxLaunch()" class="  p-0 nav-link d-flex flex-row align-items-center">
+            <img src="../../assets/compra-pix.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li>
+        <li style="margin-top: -10px;">
+          <a (click)="messageBoxLaunch()" class="  p-0 nav-link d-flex flex-row align-items-center">
+            <img src="../../assets/compra-picpay.svg" style="height: 75px; width: auto;" alt="">
+          </a>
+        </li> -->
+        <!-- <li><a href="#" routerLink="/shop" class="nav-link px-2 d-flex flex-row align-items-center"><i
+          class="pi pi-shopping-cart me-2"></i> SHOP</a></li>
+    <li><a href="#" routerLink="/roadmap" class="nav-link px-2 d-flex flex-row align-items-center"><i
+          class="pi pi-map me-2"></i> ROADMAP</a></li> -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="toolbar d-none d-sm-flex flex-column" style="position: relative !important; height: 100vh; width: 250px;">
+    <header class="w-100 h-100 d-flex flex-column justify-items-center align-items-center text-white">
+      <div class="container-fluid h-100">
+        <div class="d-flex flex-column flex-wrap align-content-center justify-content-center justify-content-lg-start">
+          <a class="d-flex align-content-center justify-content-center mb-2 mb-lg-0 text-decoration-none">
+            <img src="../../assets/logo-metalico.png" style="height: auto; width: 90%;">
+          </a>
+          <ul class="d-flex mt-lg-3 flex-column nav col-12 col-lg-auto me-lg-auto justify-content-center mb-md-0">
+            <li class="mb-2" *ngIf="this.firstname">Olá, {{this.firstname}}<a (click)="logoutUser()"
+                class="text-end text-black ms-1" style="cursor: pointer; text-decoration: none;">(Sair)</a></li>
+            <li>
+              <a href="#" routerLink="/dashboard" class="nav-link d-flex flex-row align-items-center">
+                <img src="../../assets/home.svg" style="height: 75px; width: auto;" alt="">
+              </a>
+            </li>
+            <i class="pi pi-home me-2"></i> Home</a>
+            <li style="margin-top: -40px;">
+              <a href="#" routerLink="/daily-task" class="nav-link d-flex flex-row align-items-center">
+                <img src="../../assets/daily.svg" style="height: 75px; width: auto;" alt="">
+              </a>
+            </li>
+            <li style="margin-top: -40px;">
+              <a href="#" routerLink="/renda-passiva" class="nav-link d-flex flex-row align-items-center">
+                <img src="../../assets/renda-passiva.svg" style="height: 75px; width: auto;" alt="">
+              </a>
+            </li>
+            <li style="margin-top: -40px;">
+              <a class="nav-link d-flex flex-row align-items-center" (click)="messageBoxLaunch()">
+                <img src="../../assets/compra-pix.svg" style="height: 75px; width: auto;" alt="">
+              </a>
+            </li>
+            <li><a href="#" routerLink="/shop" class="nav-link px-2 d-flex flex-row align-items-center"><i
+                  class="pi pi-shopping-cart me-2"></i> SHOP</a></li>
+            <li><a href="#" routerLink="/roadmap" class="nav-link px-2 d-flex flex-row align-items-center"><i
+                  class="pi pi-map me-2"></i> ROADMAP</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+  </div>
+  <nav class="navbar navbar-dark bg-dark d-flex d-sm-none">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="../../assets/logo-metalico.png" height="50" class="d-inline-block align-text-top">
+        StakHolders
+      </a>
+      <button class="btn btn-link bd-search-docs-toggle d-sm-flex p-0 me-3" type="button" data-bs-toggle="collapse"
+        data-bs-target="#menuMobileSh" aria-expanded="false" aria-controls="menuMobileSh"><svg
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false">
+          <title>Menu</title>
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10"
+            d="M4 7h22M4 15h22M4 23h22"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+  <div id="menuMobileSh" class="collapse w-100 bg-dark" style="height: fit-content; z-index: 9999999;">
+    <ul class="mb-0 mx-5 p-0 d-flex flex-column justify-content-center"
+      style="z-index: 9999999; list-style: none;">
+      <li class="nav-link d-flex w-100 flex-row justify-content-center align-self-center mb-2" *ngIf="this.firstname">Olá, {{this.firstname}}<a (click)="logoutUser()"
+          class="text-end text-white ms-1" style="cursor: pointer; text-decoration: none;">(Sair)</a></li>
+      <li>
+        <a href="#" routerLink="/home" class="nav-link d-flex w-100 flex-row align-items-center">
+          <img src="../../assets/home.svg" style="height: 50px; width: 100%;" alt="">
+        </a>
+      </li>
+      <li style="margin-top: -20px;">
+        <a href="#" routerLink="/daily-task" class="nav-link d-flex w-100 flex-row align-items-center">
+          <img src="../../assets/daily.svg" style="height: 50px; width: 100%;" alt="">
+        </a>
+      </li>
+      <li style="margin-top: -20px;">
+        <a href="#" routerLink="/renda-passiva" class="nav-link d-flex w-100 flex-row align-items-center">
+          <img src="../../assets/renda-passiva.svg" style="height: 50px; width: 100%;" alt="">
+        </a>
+      </li>
+      <li style="margin-top: -20px;">
+        <a class="nav-link d-flex w-100 flex-row align-items-center" (click)="messageBoxLaunch()">
+          <img src="../../assets/compra-pix.svg" style="height: 50px; width: 100%;" alt="">
+        </a>
+      </li>
+      <li><a href="#" routerLink="/shop" class="nav-link px-2 d-flex flex-row align-items-center"><i
+            class="pi pi-shopping-cart me-2"></i> SHOP</a></li>
+      <li><a href="#" routerLink="/roadmap" class="nav-link px-2 d-flex flex-row align-items-center"><i
+            class="pi pi-map me-2"></i> ROADMAP</a></li>
+    </ul>
+  </div> -->

@@ -1,0 +1,61 @@
+<!-- <app-header></app-header> -->
+<div style="height: 100vh; background: url('../../../assets/bg-video.jpg'); "
+  class="d-flex flex-column align-content-center justify-content-center align-items-center">
+  <div class="container-fluid p-0 d-flex justify-items-around align-items-center flex-column">
+    <div class="d-flex flex-row justify-content-center align-content-center mt-5">
+      <img src="../../../assets/logo-metalico.png" style="height: 100px; width: auto;">
+    </div>
+    <div class="col-6 align-content-center d-flex flex-column">
+      <div class="p-md-4 text-white align-self-center col">
+        <div class="d-flex flex-row justify-content-center">
+          <h5>Visão Geral</h5>
+        </div>
+        <div class="p-inputgroup d-flex flex-column">
+          <div *ngIf="!alterarCampos" class="d-flex flex-column w-100">
+            <small><b>Nome:</b></small> {{this.userInfo?.nome}}
+            <small><b>E-mail:</b></small> {{this.userInfo?.email}}
+            <small><b>Telefone:</b></small> {{this.userInfo?.tel}}
+            <small><b>Carteira:</b></small> {{this.userInfo?.carteira}}
+            <div class="d-flex mt-2 flex-column-reverse flex-sm-row">
+              <button routerLink="/home" style="border-radius: 40px; color: black; "
+                class="mt-2 mt-sm-0 btn-act col-8 align-self-center" type="submit">Voltar</button>
+              <!-- <button (click)="alterarCampos = true" style="border-radius: 40px; color: black; "
+                class=" ms-2 btn-act col-8 align-self-center" type="submit">Alterar</button> -->
+            </div>
+          </div>
+          <form *ngIf="alterarCampos" [formGroup]="proFileData" class="d-flex flex-column">
+            <div class="d-flex flex-column">
+              <label for="carteiraInput" class="mt-1">Nome:</label>
+              <div class="d-flex flex-column w-100">
+                <input class="mt-2" style="border-radius: 40px; width: 100%;" id="carteiraInput" type="text"
+                  formControlName="nome" [placeholder]="this.userInfo?.nome">
+              </div>
+              <label for="emailInput" class="mt-1">E-mail:</label>
+              <div class="d-flex flex-column w-100">
+                <input [placeholder]="this.userInfo?.email" class="mt-2" style="border-radius: 40px; width: 100%;"
+                  id="emailInput" type="text" formControlName="email">
+              </div>
+              <label for="telefoneInput" class="mt-1">Telefone:</label>
+              <div class="d-flex flex-column w-100">
+                <input [placeholder]="this.userInfo?.tel" class="mt-2" style="border-radius: 40px; width: 100%;"
+                  id="telefoneInput" type="text" formControlName="tel">
+              </div>
+              <label for="carteiraInput" class="mt-1">Carteira:</label>
+              <div class="d-flex flex-column w-100">
+                <input [value]="this.userInfo?.carteira" class="mt-2" style="border-radius: 40px; width: 100%;"
+                  id="carteiraInput" type="text" formControlName="carteira" [placeholder]="this.userInfo?.carteira">
+              </div>
+              <button (click)="changeRegister()" style="border-radius: 40px; color: black; "
+                class="mt-3 btn-act col-8 align-self-center" type="submit">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container #loadingScreen *ngIf="showLoading">
+    <div class="loadingScreen">
+      <img style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;"
+        src="../assets/loading.gif">
+    </div>
+  </ng-container>

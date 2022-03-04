@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "stakholders-c5fec"
+  },
+  "targets": {
+    "stakholders-c5fec": {
+      "hosting": {
+        "stakholders-app": [
+          "stakholders-c5fec"
+        ]
+      }
+    }
+  }
+}

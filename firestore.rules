@@ -1,0 +1,21 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+     match /users/{uid}/{comprovantes=**} {
+      allow read, write: if request.auth.uid == uid
+    }
+     match /users/{uid}{
+      allow read, write: if request.auth.uid == uid
+    }
+    match /users/{uid}/{tasks=**} {
+      allow read, write: if request.auth.uid == uid
+    }
+    match /{document=**} {
+      allow read, write: if (request.auth.token.email.matches('magnatatoken@gmail.com'))
+      allow read, write: if (request.auth.token.email.matches('franchitrader@gmail.com'))
+      allow read, write: if (request.auth.token.email.matches('marcwell15@gmail.com'))
+      allow read, write: if (request.auth.token.email.matches('gisliel.medley@gmail.com'))
+      allow read, write: if (request.auth.token.email.matches('chrisedfisica@hotmail.com'))
+      allow read: if request.auth != null;
+    }
+  }
+}

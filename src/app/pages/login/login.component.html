@@ -1,0 +1,38 @@
+<!-- Toolbar -->
+<div style="height: 100vh; background: url('../../../assets/bg-video.jpg'); "
+  class="d-flex flex-column justify-content-center align-items-center">
+  <div class="d-flex flex-row justify-content-center align-content-center">
+    <img src="../../../assets/logo-metalico.png" class="img-fluid w-25">
+  </div>
+  <div class="d-flex flex-column ">
+    <div class="p-col-12 p-md-4 text-white">
+      <h5 *ngIf="!passwordResetForm">Bem-vindo, Faça Login</h5>
+      <h5 *ngIf="passwordResetForm">Redefinição de senha</h5>
+      <div class="p-inputgroup d-flex flex-column">
+        <form *ngIf="!passwordResetForm" [formGroup]="userForm" class="d-flex flex-column" (ngSubmit)="loginUser()"
+          novalidate>
+          <label for="emailInput">Insira seu E-mail:</label>
+          <input id="emailInput" class="mb-2" type="text" formControlName="email">
+          <label for="senhaInput">Insira sua Senha:</label>
+          <input id="senhaInput" type="password" formControlName="password">
+          <a class="align-self-center mt-1" (click)="forgotPassword()"
+            style="text-decoration: none; cursor: pointer;">Esqueceu sua senha?</a>
+          <button style="border-radius: 40px;" class="btn-act mt-2" type="submit">ENTRAR</button>
+          <button style="border-radius: 40px;" (click)="gotoRegister()" class="btn-act mt-3" type="button">CRIAR NOVA
+            CONTA</button>
+        </form>
+        <form *ngIf="passwordResetForm" [formGroup]="resetUserForm" class="d-flex flex-column"
+          (ngSubmit)="resetUserPassword()" novalidate>
+          <label for="emailInput">Insira seu E-mail:</label>
+          <input id="emailInput" class="mb-3" type="text" formControlName="email">
+          <button style="border-radius: 40px;" class="btn-act" type="submit">ENVIAR</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container #loadingScreen *ngIf="showLoading">
+  <div class="loadingScreen">
+    <img style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;" src="../assets/loading.gif">
+  </div>
+</ng-container>

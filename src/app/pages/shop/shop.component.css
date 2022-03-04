@@ -1,0 +1,355 @@
+:host {
+  display: block;
+  overflow: auto;
+}
+
+input {
+  padding: 10px 20px;
+  /* border-radius: 40px; */
+  background: #191919;
+  color: white;
+}
+input::placeholder,
+input:focus {
+  background: #191919;
+  color: white;
+}
+::ng-deep .p-inputnumber-input {
+  padding: 10px 20px;
+  /* border-radius: 40px; */
+  background: #191919;
+  color: white;
+  font-size: 12px;
+}
+::ng-deep .p-inputnumber-input::placeholder,
+::ng-deep .p-inputnumber-input:focus {
+  background: #191919;
+  color: white;
+}
+
+::ng-deep #renda-passiva-converter-usd .p-button {
+  background: #1d9bf0 !important;
+}
+
+::ng-deep #renda-passiva-converter-usd .p-inputtext:enabled:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #2196f3;
+}
+
+.box-login {
+  background: #061c29;
+  border-radius: 5px;
+  padding: 20px 10px;
+}
+
+.btn-act {
+  background: #eeae20;
+  border-radius: 40px;
+  border: 1px solid #eeae20;
+  color: whitesmoke;
+  padding: 5px 0px;
+  font-weight: 700;
+}
+
+.btn-nav {
+  height: 100%;
+  color: black;
+  justify-items: center;
+  align-items: center;
+  display: flex;
+  font-weight: 700;
+  padding: 0px 30px;
+}
+
+::ng-deep .p-steps .p-steps-item .p-menuitem-link {
+  background: transparent !important;
+  margin: 0px 20px;
+}
+
+::ng-deep #tasks-steps {
+  display: flex;
+  flex-direction: column;
+  justify-items: space-around;
+  align-items: space-around;
+}
+::ng-deep #tasks-steps .p-steps .p-steps-item:before {
+  content: unset !important;
+}
+
+::ng-deep .tasks-steps ul {
+  flex-direction: column;
+  display: flex !important;
+}
+
+.twitter-follow-button {
+  position: relative;
+  box-sizing: border-box;
+  padding: 5px 15px 5px 15px;
+  background-color: #1d9bf0;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.instagram-follow-button {
+  position: relative;
+  box-sizing: border-box;
+  padding: 5px 15px 5px 15px;
+  background-color: #d12798;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.telegram-follow-button {
+  position: relative;
+  box-sizing: border-box;
+  padding: 5px 15px 5px 15px;
+  background-color: #205cc0;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.facebook-follow-button {
+  position: relative;
+  box-sizing: border-box;
+  padding: 5px 15px 5px 15px;
+  background-color: #4267b2;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+::ng-deep #card-tasks .p-card.p-component,
+::ng-deep #card-tasks .p-card-body,
+::ng-deep #card-tasks .p-card-content {
+  height: 100% !important;
+  padding: 0px !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-steps .p-steps-item .p-menuitem-link .p-steps-title {
+  margin-top: 0px !important;
+  margin-bottom: 10px;
+  color: whitesmoke;
+}
+
+.next-button {
+  background: #eeae20;
+  border-radius: 5px;
+  padding: 5px 0px;
+  color: #052a61;
+  border: 1px solid #eeae20;
+}
+
+.btn-nao-concluido {
+  background: gray !important;
+  color: rgb(201, 201, 201);
+  border: 1px solid gray;
+  cursor: not-allowed;
+}
+
+.btn-tarefa-incompleta {
+  background: gray !important;
+  color: rgb(201, 201, 201);
+}
+
+iframe {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -30%);
+}
+
+.icon-partner {
+  height: auto;
+  width: 100%;
+}
+
+.container-partner .flex-column.position-relative {
+  /* min-width: 100%; */
+  /* width: fit-content; */
+  /* width: 20%; */
+  flex: 1;
+  /* height: auto; */
+}
+
+.daily-task-incomplete:after {
+  content: "";
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background-repeat: no-repeat;
+  top: 0;
+  display: inline-flex;
+  left: 85%;
+  background-size: 20px;
+  background-image: url("https://cdn-icons-png.flaticon.com/512/833/833643.png");
+}
+.daily-task-completed a {
+  pointer-events: none;
+  cursor: default;
+}
+
+.daily-task-completed:after {
+  content: "";
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  background-repeat: no-repeat;
+  top: 0;
+  display: inline-flex;
+  left: 85%;
+  background-size: 20px;
+  background-image: url("https://cdn-icons-png.flaticon.com/512/1828/1828640.png");
+}
+
+.container-title h4 {
+  color: white;
+  font-weight: 300 !important;
+  border-left: 5px solid #2a9fd6;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.content-area {
+  border: 1px solid #2a9fd6;
+  background-color: #222222;
+  border: 1px solid #2a9fd6;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+}
+@media (max-width: 575.98px) {
+  .content {
+    width: 100%;
+  }
+  .selecao-renda img {
+    height: 90px;
+    width: fit-content !important;
+  }
+  #bloco-informar-cadeira {
+    width: 90vw;
+  }
+}
+@media (min-width: 575.98px) {
+  .content {
+    width: 250px;
+  }
+  #bloco-informar-cadeira {
+    width: 40vw;
+  }
+  .container-adesao {
+    height: 300px;
+    width: 600px;
+  }
+}
+
+#text-explain::-webkit-scrollbar {
+  width: 10px;
+}
+
+#text-explain::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#text-explain::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+#text-explain::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+#text-explain small {
+  margin-bottom: 0.3rem;
+}
+
+#text-selection-renda img {
+  height: 70px;
+  width: auto;
+  margin: 0px 10px;
+}
+::ng-deep .p-fileupload .p-fileupload-content {
+  background: #323232;
+  padding: 0.571rem 1rem;
+  border: 1px solid #191919;
+  color: #dedede;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+::ng-deep .p-fileupload-content {
+  position: relative;
+}
+
+::ng-deep .p-fileupload .p-fileupload-buttonbar {
+  background: #191919;
+  padding: 0.857rem 1rem;
+  border: 1px solid #191919;
+  color: #dedede;
+  border-bottom: 0 none;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+::ng-deep .botao-upload .p-button {
+  background: black;
+  border-color: #2a9fd6;
+}
+
+::ng-deep .p-fileupload-choose:not(.p-disabled):hover {
+  background: #2a9fd6;
+  border-color: black;
+}
+
+::ng-deep #renda-passiva-converter-usd {
+  display: flex;
+  flex-direction: row;
+}
+.button-renda {
+  cursor: pointer;
+}
+
+.btn-alugar-disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-alugar-enabled {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.termos-renda-passiva-block small {
+  text-align: justify;
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  text-transform: uppercase;
+}
+
+::ng-deep .p-messages {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+#confirmation-input-table {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99999999;
+}
+.table-opacity {
+  opacity: 0.3;
+}

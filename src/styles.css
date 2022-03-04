@@ -1,0 +1,86 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~primeicons/primeicons.css";
+@import "~primeng/resources/primeng.min.css";
+@import "~primeng/resources/themes/saga-blue/theme.css";
+
+body {
+  height: 100vh;
+  background: #495057;
+  /* background: #E5E5E5; */
+  /* background: #131722; */
+  width: 100%;
+  /* background-image: url("../../bg-video.jpg"); */
+  /* flex-direction: row; */
+  /* display: block; */
+}
+
+.toolbar {
+  position: relative;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  background: url('./assets/bgv.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-color: #2a9fd6; */
+  font-weight: 600;
+  z-index: 9999999;
+}
+
+
+#coinStats {
+  color: #e9ecef !important;
+  height: 250px;
+}
+
+#coinStats > div {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px !important;
+  border-width: 1px !important;
+  border-color: #2a9fd6 !important;
+  height: 100%;
+}
+
+#coinStats * {
+  border-color: #2a9fd6 !important;
+}
+
+#instagramCard{
+  text-decoration: none;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  color: #e9ecef !important;
+}
+
+#renda-passiva-form .p-dialog .p-dialog-header{
+  border-left: 2px solid #2a9fd6;
+}
+
+#renda-passiva-form .p-dialog .p-dialog-header, #renda-passiva-form .p-dialog .p-dialog-content, #renda-passiva-form .p-dialog .p-dialog-footer{
+  background: #212529;
+  color: #e9ecef;
+}
+
+
+.loadingScreen{
+  top: 0;
+  left: 0;
+  position: fixed;
+  height: 100vh;
+  z-index: 9999999999999999999;
+  width: 100vw;
+  background: black;
+}
+
+.loadingScreen img {
+  width: 300px;
+  height: auto;
+}
+
+
+.p-button{
+  background: #000;
+  border-color: #000;
+}

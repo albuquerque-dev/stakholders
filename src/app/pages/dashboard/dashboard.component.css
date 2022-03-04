@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  overflow: auto;
+}
+
+input {
+  padding: 10px 20px;
+  border-radius: 40px;
+  background: #e2e3e3;
+  color: black;
+}
+input::placeholder {
+  color: black;
+}
+
+.chart-area {
+  border: 2px solid #2a9fd6;
+  background-color: #222222;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+}
+
+.container-title h4 {
+  color: white;
+  font-weight: 300 !important;
+  border-left: 5px solid #2a9fd6;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+::ng-deep #table-walet-result .p-datatable .p-datatable-tbody > tr {
+  background: black !important;
+  color: #e2e3e3;
+}
+
+::ng-deep #table-walet-result .p-datatable .p-datatable-thead > tr > th {
+  color: #e2e3e3;
+  background: #2a9fd6;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar {
+  width: 10px;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-track {
+  background: #888;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: black;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+

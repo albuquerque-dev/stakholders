@@ -1,0 +1,30 @@
+input {
+  padding: 10px 20px;
+  border-radius: 40px;
+  background: #e2e3e3;
+  color: black;
+}
+input::placeholder {
+  color: black;
+}
+
+.box-login {
+  background: #061c29;
+  border-radius: 5px;
+  padding: 20px 10px;
+}
+
+.btn-act {
+  background: #eeae20;
+  border-radius: 40px;
+  border: 1px solid #eeae20;
+  color: whitesmoke;
+  padding: 5px 0px;
+  font-weight: 700;
+}
+
+.btn-tarefa-incompleta {
+  background: gray !important;
+  color: rgb(201, 201, 201);
+  cursor: not-allowed;
+}

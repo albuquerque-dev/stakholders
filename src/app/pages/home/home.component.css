@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  overflow: auto;
+}
+
+input {
+  padding: 10px 20px;
+  border-radius: 40px;
+  background: #e2e3e3;
+  color: blakc;
+}
+input::placeholder {
+  color: black;
+}
+
+.chart-area {
+  border: 2px solid #2a9fd6;
+  background-color: #000;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+}
+
+.container-title h4 {
+  color: white;
+  font-weight: 300 !important;
+  border-left: 5px solid #2a9fd6;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+::ng-deep #table-walet-result .p-datatable .p-datatable-tbody > tr {
+  background: black !important;
+  color: #e2e3e3;
+  font-size: 10px;
+}
+
+::ng-deep #balance-block-table,
+::ng-deep #name-block-table {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+::ng-deep #table-walet-result .p-datatable .p-datatable-thead > tr > th {
+  color: #e2e3e3;
+  background: #2a9fd6;
+  font-size: 12px;
+}
+
+::ng-deep .p-tabview-title {
+  font-size: 12px;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar {
+  width: 10px;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-track {
+  background: #888;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: black;
+}
+
+::ng-deep
+  #table-walet-result
+  .p-datatable-scrollable
+  .p-datatable-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media (min-width: 575.98px) {
+  .double-columns {
+    width: calc(50% - 2rem);
+  }
+  .single-column {
+    width: calc(50% - 1rem);
+  }
+}
+
+@media (min-width: 575.98px) {
+  #content-area-home {
+    width: 100%;
+  }
+}
+@media (max-width: 575.98px) {
+  #content-area-home {
+    width: calc(100% - 3rem);
+  }
+  .card-graph {
+    height: 500px !important;
+  }
+}
+::ng-deep .p-tabview .p-tabview-nav,
+::ng-deep .p-tabview-nav-link {
+  background: #2a9fd6 !important;
+  color: #e9ecef !important;
+}
+
+::ng-deep .p-tabview .p-tabview-panels {
+  padding: 0px;
+  background-color: black !important;
+}

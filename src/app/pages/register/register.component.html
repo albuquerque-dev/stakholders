@@ -1,0 +1,40 @@
+<div style="height: 100vh; background: url('../../../assets/bg-video.jpg'); "
+  class="d-flex flex-column align-content-center justify-content-center align-items-center">
+  <div class="container-fluid p-0 d-flex justify-items-around align-items-center flex-column">
+    <div class="d-flex flex-row justify-content-center align-content-center mt-5">
+      <img src="../../../assets/logo-metalico.png" class="img-fluid w-25">
+    </div>
+    <div class="d-flex flex-column">
+      <div class="p-col-12 p-md-4 text-white">
+        <h5>Bem-vindo, <b>{{userName}}</b></h5>
+        <div class="p-inputgroup d-flex flex-column">
+          <form *ngIf="!carteiraExist" [formGroup]="carteiraForm" class="d-flex flex-column"
+            (ngSubmit)="checkMinimunBalance()">
+            <label for="carteiraInput">Insira sua Carteira:</label>
+            <input id="carteiraInput" type="text" formControlName="carteira" placeholder="Insira sua Carteira" required>
+            <button style="border-radius: 40px;" class="btn-act mt-3" type="submit">PRÓXIMO</button>
+          </form>
+          <form *ngIf="carteiraExist" [formGroup]="userForm" class="d-flex flex-column" (ngSubmit)="registerUser()">
+            <label for="nomeImput">Insira seu Nome:</label>
+            <input id="nomeImput" class="mb-2" type="text" formControlName="nome" placeholder="Insira seu Nome Completo"
+              required>
+            <label for="emailInput">Insira seu E-mail:</label>
+            <input id="emailInput" class="mb-2" type="text" formControlName="email" placeholder="Insira seu E-mail"
+              required>
+            <label for="telInput">Insira seu WhatsApp:</label>
+            <input id="telInput" class="mb-2" type="tel" formControlName="tel" placeholder="Insira seu WhatsApp" required>
+            <label for="senhaInput">Insira sua Senha:</label>
+            <input id="senhaInput" type="password" formControlName="password" placeholder="Insira sua Senha" required>
+            <button style="border-radius: 40px;" class="btn-act mt-3" type="submit">PRÓXIMO</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container #loadingScreen *ngIf="showLoading">
+  <div class="loadingScreen">
+    <img style="position: absolute; transform: translate(-50%, -50%); left: 50%; top: 50%;"
+      src="../assets/loading.gif">
+  </div>
+</ng-container>
