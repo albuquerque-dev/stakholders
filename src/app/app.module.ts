@@ -56,6 +56,13 @@ import { RadarComponent } from './chart/radar/radar.component';
 import { ResgateComponent } from './pages/resgate/resgate.component';
 import { PortalComponent } from './site/portal/portal.component';
 import { FooterComponent } from './site/components/footer/footer.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin
+]);
 
 registerLocaleData(ptBr);
 
@@ -116,6 +123,8 @@ registerLocaleData(ptBr);
     DropdownModule,
     ClipboardModule,
     TabViewModule,
+    PaginatorModule,
+    FullCalendarModule // register FullCalendar with you app
   ],
   providers: [AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'pt' }, ConfirmationService],
   bootstrap: [AppComponent]

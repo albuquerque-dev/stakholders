@@ -73,15 +73,27 @@
   font-size: 12px;
 }
 ::ng-deep.customer-badge.status-pendente {
-  background-color: #ffcdd2;
-  color: #c63737;
+  background-color: orange;
+  color: white;
+  font-size: 8px !important;
 }
-::ng-deep.customer-badge.status-aprovado {
-  background-color: #c8e6c9;
-  color: #256029;
+
+::ng-deep.customer-badge.status-resgatado {
+  background-color: red;
+  color: white;
   font-size: 6px !important;
 }
 
+::ng-deep.customer-badge.status-aprovado {
+  background-color: #256029;
+  color: white;
+  font-size: 8px !important;
+}
+::ng-deep.customer-badge.status-atualizado {
+  background-color: blue;
+  color: white;
+  font-size: 8px !important;
+}
 ::ng-deep.customer-badge {
   border-radius: 2px;
   padding: 0.25em 0.5rem;

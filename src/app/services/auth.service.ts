@@ -315,8 +315,12 @@ export class AuthService {
       } else {
         url = 'https://api.bscscan.com/api?module=account&action=tokentx&address=' + carteiraInput + '&apikey=7YF5Z835K59ESTEMIT9T9WHVNUS2IPQXKP'
       }
-      let result = await this.http.get<any>(url).toPromise()
-      return result;
+      setTimeout(async () => {
+        let result = await this.http.get<any>(url).toPromise()
+        if (result?.length > 0) {
+          return result;
+        }
+      }, 1000);
     }
   }
 
@@ -585,7 +589,7 @@ export class AuthService {
         .doc(uid)
         .collection("comprovantes")
         .add(data)
-        .then(response => console.log('enviado com sucesso'), error => window.alert('Erro no envio das informações! Por favor, entre em contato com o suporte.'));
+        .then(response => window.alert('Contrato Enviado com Sucesso'), error => window.alert('Erro no envio das informações! Por favor, entre em contato com o suporte.'));
     });
   }
 

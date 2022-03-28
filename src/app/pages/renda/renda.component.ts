@@ -45,6 +45,7 @@ export class RendaComponent implements OnInit, OnChanges {
   contractSelectedUpdate: any;
   updateObjContract: any;
   taxaDescontoAtualizacao: any;
+  approvedContracts: any;
 
   constructor(private authService: AuthService,
     private confirmationService: ConfirmationService,
@@ -60,11 +61,12 @@ export class RendaComponent implements OnInit, OnChanges {
 
   async ngOnInit() {
     this.setPageInfo()
-    this.getReportFromContracts()
+    await this.getReportFromContracts()
     let resultSH = await this.authService.getCotationSHUSD()
     this.cotacaoValoresSHUSD = resultSH?.data?.quote[0].price?.toFixed(5);
     let resultBNB = await this.rendaService.getCotationBNBUSD()
     this.cotacaoValoresBNBUSD = resultBNB?.result?.ethusd;
+    await this.adjustOldContracts()
   }
 
   ngOnChanges() {
@@ -99,10 +101,18 @@ export class RendaComponent implements OnInit, OnChanges {
       evt.value = 0
     }
     this.inputQuantityTokens = +evt.value;
+
     if (this.selectedToken?.code === 'Stakholders') {
       if (this.cotacaoValoresSHUSD && this.inputQuantityTokens && this.inputQuantityTokens >= 10000) {
         this.quantityInsufficient = false;
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresSHUSD;
+
+        if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
+          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+        }
+
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
         // VALOR EM DOLAR
@@ -118,6 +128,13 @@ export class RendaComponent implements OnInit, OnChanges {
     if (this.selectedToken?.code === 'Bnb') {
       if (this.cotacaoValoresBNBUSD && this.inputQuantityTokens) {
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresBNBUSD;
+
+        if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
+          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+        }
+
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
         // VALOR EM DOLAR
@@ -136,6 +153,14 @@ export class RendaComponent implements OnInit, OnChanges {
       if (this.cotacaoValoresSHUSD && this.inputQuantityTokens && this.inputQuantityTokens >= 10000) {
         this.quantityInsufficient = false;
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresSHUSD;
+
+
+        if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
+          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+        }
+
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
         // VALOR EM DOLAR
@@ -151,6 +176,14 @@ export class RendaComponent implements OnInit, OnChanges {
     if (this.selectedToken?.code === 'Bnb') {
       if (this.cotacaoValoresBNBUSD && this.inputQuantityTokens) {
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresBNBUSD;
+
+
+        if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
+          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+        }
+
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
         // VALOR EM DOLAR
@@ -168,9 +201,9 @@ export class RendaComponent implements OnInit, OnChanges {
       if (this.userInfo && this.userInfo.carteira) {
         let objTemp: any;
         if (this.selectedToken?.code === 'Bnb') {
-          objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.trim(), 'Bnb')
+          objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.toLowerCase()?.trim(), 'Bnb')
         } else {
-          objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.trim())
+          objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.toLowerCase()?.trim())
         }
         if (objTemp && objTemp.status === '1') {
           let transaction = objTemp?.result?.filter((c: any) => c.hash?.toLowerCase() === this.inputHash?.trim()?.toLowerCase())
@@ -188,6 +221,7 @@ export class RendaComponent implements OnInit, OnChanges {
               this.hashVerified = true;
             } else if (+quantidadeConvertida !== +this.inputQuantityTokens) {
               this.manualConvertValue(quantidadeConvertida)
+              this.msgError = null;
               this.hashVerified = true;
             } else if (transaction[0]?.from.toLowerCase() !== this.userInfo.carteira?.toLowerCase()) {
               this.msgError = 'Carteira informada na hash diferente da carteira do usuário.'
@@ -201,9 +235,9 @@ export class RendaComponent implements OnInit, OnChanges {
         if (this.userInfo && this.userInfo.carteira) {
           let objTemp: any;
           if (this.selectedToken?.code === 'Bnb') {
-            objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.trim(), 'Bnb')
+            objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.toLowerCase()?.trim(), 'Bnb')
           } else {
-            objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.trim())
+            objTemp = await this.authService.verifyHashTransaction(this.userInfo?.carteira?.toLowerCase()?.trim())
           }
           if (objTemp && objTemp.status === '1') {
             let transaction = objTemp?.result?.filter((c: any) => c.hash?.toLowerCase() === this.inputHash?.trim()?.toLowerCase())
@@ -248,9 +282,9 @@ export class RendaComponent implements OnInit, OnChanges {
       modalidade: this.selectedToken?.code,
       periodo: this.selectedRentPeriodicity,
       hash: this.inputHash,
-      data_incio: new Date(),
+      data_incio: new Date().toUTCString(),
       data_fim: this.dataFimContrato,
-      data_compra: new Date,
+      data_compra: new Date().toUTCString(),
       status: 'pendente',
     }
   }
@@ -298,50 +332,50 @@ export class RendaComponent implements OnInit, OnChanges {
 
   openRentPeriodicityDialog() {
     let today = new Date();
-    this.dataFimContrato = new Date(new Date().setDate(today.getDate() + this.selectedRentPeriodicity));
+    this.dataFimContrato = new Date(new Date().setDate(today.getDate() + this.selectedRentPeriodicity)).toUTCString();
     if (this.selectedRentPeriodicity === 30) {
       this.periodicityTitle = 'Periodo de 30 dias'
       if (this.selectedToken?.code === 'Stakholders' || this.contractSelectedUpdate?.modalidade === 'Stakholders') {
-        this.periodicityText = 'Decorrido os 30 dias de aluguel, você receberá  30% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
+        this.periodicityText = 'Decorrido os 30 dias de aluguel, você receberá  30% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
       }
       if (this.selectedToken?.code === 'Bnb' || this.contractSelectedUpdate?.modalidade === 'Bnb') {
-        this.periodicityText = 'Decorrido os 30 dias de aluguel, você receberá 30% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
+        this.periodicityText = 'Decorrido os 30 dias de aluguel, você receberá 30% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
       }
     }
     if (this.selectedRentPeriodicity === 60) {
       this.periodicityTitle = 'Periodo de 60 dias'
       if (this.selectedToken?.code === 'Stakholders' || this.contractSelectedUpdate?.modalidade === 'Stakholders') {
-        this.periodicityText = 'Decorrido os 60 dias de aluguel, você receberá  70% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 6 % de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
+        this.periodicityText = 'Decorrido os 60 dias de aluguel, você receberá  70% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 30 % de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
       }
       if (this.selectedToken?.code === 'Bnb' || this.contractSelectedUpdate?.modalidade === 'Bnb') {
-        this.periodicityText = 'Decorrido os 60 dias de aluguel, você receberá 70% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
+        this.periodicityText = 'Decorrido os 60 dias de aluguel, você receberá 70% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
       }
     }
     if (this.selectedRentPeriodicity === 90) {
       this.periodicityTitle = 'Periodo de 90 dias'
       if (this.selectedToken?.code === 'Stakholders' || this.contractSelectedUpdate?.modalidade === 'Stakholders') {
-        this.periodicityText = 'Decorrido os 90 dias de aluguel, você receberá  100% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
+        this.periodicityText = 'Decorrido os 90 dias de aluguel, você receberá  100% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
       }
       if (this.selectedToken?.code === 'Bnb' || this.contractSelectedUpdate?.modalidade === 'Bnb') {
-        this.periodicityText = 'Decorrido os 90 dias de aluguel, você receberá 100% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
+        this.periodicityText = 'Decorrido os 90 dias de aluguel, você receberá 100% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
       }
     }
     if (this.selectedRentPeriodicity === 120) {
       this.periodicityTitle = 'Periodo de 120 dias'
       if (this.selectedToken?.code === 'Stakholders' || this.contractSelectedUpdate?.modalidade === 'Stakholders') {
-        this.periodicityText = 'Decorrido os 120 dias de aluguel, você receberá  150% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
+        this.periodicityText = 'Decorrido os 120 dias de aluguel, você receberá  150% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
       }
       if (this.selectedToken?.code === 'Bnb' || this.contractSelectedUpdate?.modalidade === 'Bnb') {
-        this.periodicityText = 'Decorrido os 120 dias de aluguel, você receberá 150% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
+        this.periodicityText = 'Decorrido os 120 dias de aluguel, você receberá 150% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
       }
     }
     if (this.selectedRentPeriodicity === 150) {
       this.periodicityTitle = 'Periodo de 150 dias'
       if (this.selectedToken?.code === 'Stakholders' || this.contractSelectedUpdate?.modalidade === 'Stakholders') {
-        this.periodicityText = 'Decorrido os 150 dias de aluguel, você receberá  200% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
+        this.periodicityText = 'Decorrido os 150 dias de aluguel, você receberá  200% sobre o valor alocado, calculado a partir da quantidade em SH no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá suas SH com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado por igual período.'
       }
       if (this.selectedToken?.code === 'Bnb' || this.contractSelectedUpdate?.modalidade === 'Bnb') {
-        this.periodicityText = 'Decorrido os 150 dias de aluguel, você receberá 200% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 6% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
+        this.periodicityText = 'Decorrido os 150 dias de aluguel, você receberá 200% sobre o valor alocado, calculado a partir da quantidade em BNB no dia da alocação. Caso queira encerrar a alocação antecipadamente, receberá seus BNBs com um desconto de 30% de taxa administrativa. Obs.: caso não solicite o seu aluguel no período contratado será reaplicado somente a quantidade inicial dos BNBs por igual período. Após o prazo a Plataforma procederá com o pagamento do Aluguel em BNBs.'
       }
     }
 
@@ -397,9 +431,11 @@ export class RendaComponent implements OnInit, OnChanges {
     try {
       if (this.userInfo.uid && this.rendaPassivaDataToDB) {
         this.authService.addComprovanteInfo(this.userInfo.uid, this.rendaPassivaDataToDB)
+      } else {
+        window.alert('Erro ao processar o envio das informações, Por favor, entre em contato com o suporte.');
       }
     } catch (error) {
-      window.alert('Erro ao processar o envio das informações, Por favor, entre em contato com o suporte.')
+      window.alert('Erro ao processar o envio das informações, Por favor, entre em contato com o suporte.');
       console.error(error)
     }
   }
@@ -421,6 +457,7 @@ export class RendaComponent implements OnInit, OnChanges {
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
       }
     })
+    this.approvedContracts = this.reportContractsData.filter((d: any) => d.status === 'aprovado' || d.status === 'atualizado')
     this.reportContractsData = this.reportContractsData?.reverse();
     console.log('')
   }
@@ -465,7 +502,7 @@ export class RendaComponent implements OnInit, OnChanges {
     let valorCorrigido = (+novoValor - (+novoValor * 0.12));
     this.taxaDescontoAtualizacao = (+novoValor * 0.12);
     let today = new Date();
-    let nextday = new Date(new Date(contract.data_fim?.seconds * 1000).setDate(contract.data_fim.toDate().getDate() + 1));
+    let nextday = new Date(new Date(contract.data_fim).setDate(new Date(contract.data_fim).getDate() + 1));
     this.updateObjContract = { ...contract };
     this.updateObjContract.valor_quantidade = +valorCorrigido?.toFixed(2);
     this.updateObjContract.data_incio = nextday;
@@ -511,13 +548,14 @@ export class RendaComponent implements OnInit, OnChanges {
     this.updateObjContract.periodo = this.selectedRentPeriodicity;
     let startDate = new Date(this.updateObjContract.data_incio)
     let endDate = new Date(startDate.setDate(startDate.getDate() + +this.selectedRentPeriodicity));
-    this.updateObjContract.data_fim = endDate;
-    this.updateObjContract.data_compra = new Date(this.updateObjContract.data_compra?.seconds * 1000);
+    this.updateObjContract.data_incio = this.updateObjContract.data_incio.toUTCString();
+    this.updateObjContract.data_fim = endDate.toUTCString();
+    this.updateObjContract.data_compra = new Date(this.updateObjContract.data_compra).toUTCString();
   }
 
   verifyContractPeriod(contract: any): any {
     if (contract?.data_fim) {
-      let dataFim = new Date(contract.data_fim.toDate());
+      let dataFim = new Date(contract.data_fim);
       let dataPermissao = new Date(new Date(dataFim).setDate(dataFim.getDate() - 7))
       let dataHoje = new Date();
       let validarData = (dataHoje >= dataPermissao && dataHoje <= dataFim)
@@ -558,4 +596,31 @@ export class RendaComponent implements OnInit, OnChanges {
     });
   }
 
+  async adjustOldContracts() {
+    this.reportContractsData.map(async (d: any) => {
+      if (d.status === 'aprovado' && d.uid && d.id && d.data_incio && d.data_fim && d.data_compra) {
+        let dataInicio = new Date(d.data_incio);
+        let dataFim = new Date(d.data_fim);
+        let dataHoje = new Date();
+        console.log('oi', dataInicio, dataFim, dataHoje)
+        if (dataFim < dataHoje) {
+          console.log('oi')
+          let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo));
+          console.log(dataFim, novaDataFim, dataHoje)
+          await this.authService.changeContractStatus(d.uid.trim(), d.contract_id.trim(), { data_incio: dataFim, data_fim: novaDataFim })
+          await this.authService.backupEditedContract(d.uid.trim(), d)
+          await this.getReportFromContracts()
+        }
+      }
+    })
+  }
+
+  openSupport() {
+    let today = new Date()
+    if (today.getDay() !== 6 && today.getDay() !== 0) {
+      window.open('https://t.me/gqqdev', '_blank');
+    } else {
+      this.msgs = [{ severity: 'info', summary: 'Informação', detail: 'Atendimento disponivel de Segunda a Sexta-feira, entre em contato novamente mais tarde.' }];
+    }
+  }
 }

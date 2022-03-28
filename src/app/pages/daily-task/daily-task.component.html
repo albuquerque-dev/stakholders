@@ -1,335 +1,139 @@
-<div class="d-flex flex-column flex-sm-row w-100">
+<div class="d-flex flex-column flex-sm-column w-100">
   <div class="content flex-row flex-sm-row" style="height: 60px;">
     <app-header></app-header>
   </div>
-  <div class="d-flex flex-column w-100 col-12 col-sm">
-    <div style="height: calc(100vh - 60px); margin-top: 60px;"
-      class="d-flex flex-column align-content-center justify-content-center align-items-center">
-      <!-- <h1 class="display-1 text-white">Em Construção</h1> -->
-      <div class="h-100 w-100 d-flex flex-column">
-        <div class="d-flex flex-row h-100">
-          <div class="d-flex flex-column flex-fill mx-sm-5 chart-area h-100">
-            <div class="d-flex flex-row w-100 h-100 container-title">
-              <div class="d-flex flex-row col h-100">
-                <div class="d-flex flex-column w-100 h-100">
-                  <ng-container *ngIf="this.actualTask === 0">
-                    <iframe id="helkinTasks" src="https://gleam.io/gcE4F/helkin-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 1">
-                    <iframe id="xmineTasks" src="https://gleam.io/qbAWD/xmine-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 2">
-                    <iframe id="xmineTasks" src="https://gleam.io/TifEc/worl6game-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 3">
-                    <iframe id="xmineTasks" src="https://gleam.io/qbowZ/azul-token-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 4">
-                    <iframe id="xmineTasks" src="https://gleam.io/7vuUa/basketball-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 5">
-                    <iframe id="xmineTasks" src="https://gleam.io/u0TxO/savebee-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 6">
-                    <iframe id="xmineTasks" src="https://gleam.io/551ci/hacker-space-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 7">
-                    <iframe id="xmineTasks" src="https://gleam.io/7yZRQ/velox-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 8">
-                    <iframe id="xmineTasks" src="https://gleam.io/Vgt0p/rayons-energy-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 9">
-                    <iframe id="xmineTasks" src="https://gleam.io/kbr40/reibit-tasks" scrolling="no"
-                      style="height: 100%; width: 100%;" frameborder="0"></iframe>
-                  </ng-container>
-                  <ng-container *ngIf="this.actualTask === 10">
-                    <div
-                      class="d-flex flex-column w-100 mb-5 mb-sm-0 justify-content-center align-content-center h-100">
-                      <div class="d-flex d-sm-none flex-column justify-content-center">
-                        <div class="d-flex mt-3 mt-sm-3 flex-column me-4 ms-4 ms-sm-5 content-area">
-                          <div class="d-flex flex-row w-100 container-title justify-content-between">
-                            <h4 class="ps-3 pe-3"> Como funciona?</h4>
-                          </div>
-                          <div class="w-100 mb-3" style="border-top: 1px solid #2a9fd6;">
-                            <div class="d-flex flex-row text-white">
-                              <div class="d-flex flex-column ms-3 mt-3">
-                                <small>
-                                  Você terá que acessar as redes sociais de todos nossos pareceiros à cada 24h
-                                </small>
-                                <small>
-                                  1- Clique sobre o ícone de cada parceiro.
-                                </small>
-                                <small>
-                                  2- Execute todas as tarefas solicitadas.
-                                </small>
-                                <small>
-                                  3- Após a conclusão clique em reivindicar.
-                                </small>
-                                <small>
-                                  Finalizadas as tarefas, aguardem o tempo necessário para realizar novamente as
-                                  tarefas.
-                                </small>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="d-flex d-sm-none flex-column ">
-                        <div
-                          class="d-flex mt-3 mt-sm-0 flex-column flex-fill me-sm-5 ms-sm-0 me-4 ms-4 h-100 content-area ">
-                          <div class="d-flex flex-row w-100 container-title justify-content-between">
-                            <h4 class="ps-3 pe-3">Atividades Diárias</h4>
-                          </div>
-                          <div class="w-100 h-100" style="border-top: 1px solid #2a9fd6;">
-                            <div class="d-flex flex-row text-white">
-                              <div class="d-flex flex-column ms-3 mt-2 mb-2">
-                                <small class="text-white">Informações Importantes:</small>
-                                <small>Todas as tarefas devem ser executadas.
-                                  Haverá auditorias diárias para avaliar seu desempenho. Caso não esteja cumprindo,
-                                  medidas serão tomadas, podendo até mesmo chegar a uma exclusão da plataforma.</small>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="d-flex flex-column flex-sm-row h-100 mt-3 mt-sm-0 container-partner justify-content-center">
-                        <div class="d-flex flex-row align-self-center col-10 col-sm-6">
-                          <div class="d-flex flex-column flex-fill justify-content-center align-content-center">
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('world6game')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/WORL6GAME_Bot" (click)="checkTask('world6game')"
-                                style="text-decoration: none;" class="w-100 h-100">
-                                <img src="../../../assets/2.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('basketball')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/BASKETBALL_Oficial_Bot" (click)="checkTask('basketball')"
-                                style="text-decoration: none;" class="w-100 h-100">
-                                <img src="../../../assets/3.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('azultoken')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/AZULTOKEN_Bot" (click)="checkTask('azultoken')"
-                                style="text-decoration: none;" class="w-100 h-100">
-                                <img src="../../../assets/4.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('savebee')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/SAVEBEEAirDrop_Bot" (click)="checkTask('savebee')"
-                                style="text-decoration: none;" class="w-100 h-100">
-                                <img src="../../../assets/5.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('rayons')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/RAYONS_Bot" (click)="checkTask('rayons')"
-                                style="text-decoration: none;" class="w-100 h-100">
-                                <img src="../../../assets/6.svg" class="icon-partner">
-                              </a>
-                            </div>
-                          </div>
-                          <div class=" d-flex flex-column flex-fill justify-content-center align-content-center ms-sm-5">
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('velox')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/VELOXAirDrop_Bot" (click)="checkTask('velox')">
-                                <img src="../../../assets/7.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class=" d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('x-mine')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/XMINEAirDrop_Oficial_Bot" (click)="checkTask('x-mine')">
-                                <img src="../../../assets/8.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('helkin')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/HELKIN_AirDrop_Bot" (click)="checkTask('helkin')">
-                                <img src="../../../assets/9.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('hacker')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/HACKER_SPACE_Oficial_Bot" (click)="checkTask('hacker')">
-                                <img src="../../../assets/10.svg" class="icon-partner">
-                              </a>
-                            </div>
-                            <div class="d-flex flex-column position-relative"
-                              [ngClass]="isTaskCompleted('reibit')? 'daily-task-completed' : 'daily-task-incomplete'">
-                              <a href="https://t.me/REIBITAirDrop_Bot" (click)="checkTask('reibit')">
-                                <img src="../../../assets/11.svg" class="icon-partner">
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="d-none d-sm-flex flex-column justify-content-center">
-                          <div class="d-flex mt-3 mt-sm-3 flex-column me-5 ms-0 ms-sm-5 content-area">
-                            <div class="d-flex flex-row w-100 container-title justify-content-between">
-                              <h4 class="ps-3 pe-3"> Como funciona?</h4>
-                            </div>
-                            <div class="w-100 mb-3" style="border-top: 1px solid #2a9fd6;">
-                              <div class="d-flex flex-row text-white">
-                                <div class="d-flex flex-column ms-3 mt-3">
-                                  <small>
-                                    Você terá que acessar as redes sociais de todos nossos pareceiros à cada 24h
-                                  </small>
-                                  <small>
-                                    1- Clique sobre o ícone de cada parceiro.
-                                  </small>
-                                  <small>
-                                    2- Execute todas as tarefas solicitadas.
-                                  </small>
-                                  <small>
-                                    3- Após a conclusão clique em reivindicar.
-                                  </small>
-                                  <small>
-                                    Finalizadas as tarefas, aguardem o tempo necessário para realizar novamente as
-                                    tarefas.
-                                  </small>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="d-flex mt-3 mt-sm-3 flex-column me-sm-5 ms-sm-5 me-4 ms-4 content-area ">
-                            <div class="d-flex flex-row w-100 container-title justify-content-between">
-                              <h4 class="ps-3 pe-3">Atividades Diárias</h4>
-                            </div>
-                            <div class="w-100 h-100" style="border-top: 1px solid #2a9fd6;">
-                              <div class="d-flex flex-row text-white">
-                                <div class="d-flex flex-column ms-3 mt-2 mb-2">
-                                  <small class="text-white">Informações Importantes:</small>
-                                  <small>Todas as tarefas devem ser executadas.
-                                    Haverá auditorias diárias para avaliar seu desempenho. Caso não esteja cumprindo,
-                                    medidas serão tomadas, podendo até mesmo chegar a uma exclusão da
-                                    plataforma.</small>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+  <div class="d-flex flex-column w-100 justify-items-center align-items-center" style="height: calc(100vh - 60px)">
+    <div id="content-area-home" class="d-block h-100 w-100">
+      <div class="d-flex flex-row w-100 h-100">
+        <div class="ms-5 d-flex flex-column card-tasks col-sm-2-3">
+          <div class="d-flex flex-column">
+            <h2 class="label-tasks">Tarefas</h2>
+          </div>
+          <ng-container *ngIf="taskPage === 0">
+            <div class="d-flex flex-column w-100 align-items-center">
+              <div class="d-flex flex-column mt-4">
+                <div class="d-flex flex-row">
+                  <div class="d-flex flex-column">
+                    <div class="logo-task">
+                      <img src="../../../assets/cmc.png" alt="">
                     </div>
-                  </ng-container>
-                  <!-- <ng-container>
-                    <div class="d-flex flex-column justify-content-center align-content-center">
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['seguirTwitter']}"
-                        (click)="validarTask('seguirTwitter')" class="twitter-follow-button mt-2"><i
-                          class="pi pi-twitter me-2"></i>Follow
-                        @{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['tweetTwitter']}"
-                        (click)="validarTask('tweetTwitter')" class="twitter-follow-button mt-2"><i
-                          class="pi pi-twitter me-2"></i>Tweet
-                        #{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['seguirInstagram']}"
-                        (click)="validarTask('seguirInstagram')" class="instagram-follow-button mt-2"><i
-                          class="pi pi-instagram me-2"></i>Seguir
-                        @{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['comentarioInstagram']}"
-                        (click)="validarTask('comentarioInstagram')" class="instagram-follow-button mt-2"><i
-                          class="pi pi-instagram me-2"></i>Deixar um
-                        Comentário @{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['curtirInstagram']}"
-                        (click)="validarTask('curtirInstagram')" class="instagram-follow-button mt-2"><i
-                          class="pi pi-instagram me-2"></i>Curtir uma
-                        Foto @{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['canalTelgram']}"
-                        (click)="validarTask('canalTelgram')" class="telegram-follow-button mt-2"><i
-                          class="pi pi-telegram me-2"></i>Entrar no Canal
-                        do Telegram @{{this.items[actualTask]?.label}}</a>
-                      <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['curtirFacebook']}"
-                        (click)="validarTask('curtirFacebook')" class="facebook-follow-button mt-2"><i
-                          class="pi pi-facebook me-2"></i>Curtir a Pagina
-                        @{{this.items[actualTask]?.label}}</a>
-                      <button [disabled]="!tasksComplete" (click)="nextPage()"
-                        [ngClass]="{'btn-nao-concluido': !tasksComplete}"
-                        class="mt-2 w-100 next-button">PRÓXIMO</button>
+                  </div>
+                  <div class="d-flex flex-column ms-2">
+                    <div class="d-flex flex-column">
+                      <h5 class="title-task">
+                        CoinMarketcap
+                      </h5>
+                      <small class="info-task my-1">Curta a StakHolders </small>
+                      <button class="btn-tasks" (click)="openPartner('coinmarketcap')">+ Concluir</button>
                     </div>
-                  </ng-container> -->
+                  </div>
                 </div>
               </div>
+              <div class="d-flex flex-column mt-4">
+                <div class="d-flex flex-row">
+                  <div class="d-flex flex-column">
+                    <div class="logo-task">
+                      <img src="../../../assets/coinscope.png" alt="">
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column ms-2">
+                    <div class="d-flex flex-column">
+                      <h5 class="title-task">
+                        CoinScope
+                      </h5>
+                      <small class="info-task my-1">Curta a StakHolders </small>
+                      <button class="btn-tasks">+ Concluir</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column mt-4">
+                <div class="d-flex flex-row">
+                  <div class="d-flex flex-column">
+                    <div class="logo-task">
+                      <img src="../../../assets/coinsniper.png" alt="">
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column ms-2">
+                    <div class="d-flex flex-column">
+                      <h5 class="title-task">
+                        CoinSniper
+                      </h5>
+                      <small class="info-task my-1">Curta a StakHolders </small>
+                      <button class="btn-tasks">+ Concluir</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-column mt-4">
+                <div class="d-flex flex-row">
+                  <div class="d-flex flex-column">
+                    <div class="logo-task">
+                      <img src="../../../assets/coingecko.png" alt="">
+                    </div>
+                  </div>
+                  <div class="d-flex flex-column ms-2">
+                    <div class="d-flex flex-column">
+                      <h5 class="title-task">
+                        CoinGecko
+                      </h5>
+                      <small class="info-task my-1">Curta a StakHolders </small>
+                      <button class="btn-tasks">+ Concluir</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div class="paginator-div d-flex">
+            <p-paginator [showFirstLastIcon]="false" [rows]="1" [totalRecords]="2" styleClass="paginator-task">
+            </p-paginator>
+          </div>
+        </div>
+        <div class="d-flex flex-column mx-3 w-100" style="margin-top: 30px; height: calc(100vh - 120px)">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-row w-100">
+              <div class="d-flex flex-column card-info-box flex-fill">
+                <div class="d-flex flex-row" style="align-items: center;">
+                  <img class="icon-card-box"
+                    src="https://cdn-icons.flaticon.com/png/512/2386/premium/2386746.png?token=exp=1646671237~hmac=480fec7ec64b2cb84b3f2934ab4dbd84">
+                  <h5 class="mb-0 ms-2" style="color: hsl(0deg 0% 100% / 90%);">Total Tarefas Realizadas</h5>
+                </div>
+                <div class="d-flex flex-row" class="text-center
+                ">
+                  <h5>0</h5>
+                </div>
+              </div>
+              <div class="d-flex flex-column card-info-box ms-3 flex-fill">
+                <div class="d-flex flex-row" style="align-items: center;">
+                  <img class="icon-card-box" src="https://cdn-icons-png.flaticon.com/128/2329/2329944.png">
+                  <h5 class="mb-0 ms-2" style="color: hsl(0deg 0% 100% / 90%);">Saldo Ganho com Tarefas</h5>
+                </div>
+                <div class="d-flex flex-row" class="text-center
+                ">
+                  <h5>0</h5>
+                </div>
+              </div>
+              <div class="d-flex flex-column card-info-box ms-3 flex-fill">
+                <div class="d-flex flex-row" style="align-items: center;">
+                  <img class="icon-card-box"
+                    src="https://cdn-icons.flaticon.com/png/512/2386/premium/2386469.png?token=exp=1646671279~hmac=84caf88a6ca03ffe6dfab81dc776399f">
+                  <h5 class="mb-0 ms-2" style="color: hsl(0deg 0% 100% / 90%);">Valor a Receber</h5>
+                </div>
+                <div class="d-flex flex-row" class="text-center
+                ">
+                  <h5><b>$</b> 0</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-column h-100">
+            <div class="d-flex flex-column h-100">
+              <full-calendar [options]="calendarOptions"></full-calendar>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
-    <!-- <app-header></app-header> -->
-    <!--<div style="height: calc(100vh - 60px); background: url('../../../assets/bg-video.jpg'); "
-  class="d-flex flex-column align-content-center justify-content-center align-items-center">
-  <div class="container-fluid p-0 d-flex justify-items-around align-items-center flex-column h-100">
-    <div class="d-flex flex-row justify-items-center align-items-center h-100">
-      <div class="d-none mb-3 flex-row justify-content-center align-content-center">
-        <div class="d-flex flex-column justify-content-center align-content-center">
-          <img src="../../../assets/logo-metalico.png" style="width: 80px; height: 80px;">
-        </div>
-        <div class="d-flex flex-column justify-content-center align-content-center">
-          <img src="../../../assets/logo-metalico.png" style="width: 80px; height: 80px;">
-        </div>
-        <div class="d-flex flex-column justify-content-center align-content-center">
-          <img src="../../../assets/logo-metalico.png" style="width: 80px; height: 80px;">
-        </div>
-        <div class="d-flex flex-column justify-content-center align-content-center">
-          <img src="../../../assets/logo-metalico.png" style="width: 80px; height: 80px;">
-        </div>
-        <div class="d-flex flex-column justify-content-center align-content-center">
-          <img src="../../../assets/logo-metalico.png" style="width: 80px; height: 80px;">
-        </div>
-      </div>
-    </div>
-    <div class="d-flex flex-row col-6" style="height: calc(100% - 60px); margin-top: 30px;">
-      <div class="d-flex flex-column w-100 h-100">
-        <ng-container *ngIf="this.actualTask === 0">
-          <iframe #helkinTasks id="helkinTasks" src="https://gleam.io/gcE4F/helkin-tasks" scrolling="no"
-            style="height: 100%; width: 100%;" frameborder="0"></iframe>
-        </ng-container>
-        <ng-container *ngIf="this.actualTask === 1">
-          <iframe #helkinTasks id="xmineTasks" src="https://gleam.io/qbAWD/xmine-tasks" scrolling="no"
-            style="height: 100%; width: 100%;" frameborder="0"></iframe>
-        </ng-container>
-         <ng-container>
-          <div class="d-flex flex-column justify-content-center align-content-center">
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['seguirTwitter']}" (click)="validarTask('seguirTwitter')"
-              class="twitter-follow-button mt-2"><i class="pi pi-twitter me-2"></i>Follow
-              @{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['tweetTwitter']}" (click)="validarTask('tweetTwitter')"
-              class="twitter-follow-button mt-2"><i class="pi pi-twitter me-2"></i>Tweet
-              #{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['seguirInstagram']}"
-              (click)="validarTask('seguirInstagram')" class="instagram-follow-button mt-2"><i
-                class="pi pi-instagram me-2"></i>Seguir
-              @{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['comentarioInstagram']}"
-              (click)="validarTask('comentarioInstagram')" class="instagram-follow-button mt-2"><i
-                class="pi pi-instagram me-2"></i>Deixar um
-              Comentário @{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['curtirInstagram']}"
-              (click)="validarTask('curtirInstagram')" class="instagram-follow-button mt-2"><i
-                class="pi pi-instagram me-2"></i>Curtir uma
-              Foto @{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['canalTelgram']}" (click)="validarTask('canalTelgram')"
-              class="telegram-follow-button mt-2"><i class="pi pi-telegram me-2"></i>Entrar no Canal
-              do Telegram @{{this.items[actualTask]?.label}}</a>
-            <a [ngClass]="{'btn-tarefa-incompleta': !this.tasks[0]['curtirFacebook']}" (click)="validarTask('curtirFacebook')"
-              class="facebook-follow-button mt-2"><i class="pi pi-facebook me-2"></i>Curtir a Pagina
-              @{{this.items[actualTask]?.label}}</a>
-            <button [disabled]="!tasksComplete" (click)="nextPage()" [ngClass]="{'btn-nao-concluido': !tasksComplete}"
-              class="mt-2 w-100 next-button">PRÓXIMO</button>
-          </div>
-        </ng-container>
-      </div>
-    </div>
   </div>
-</div> -->
+</div>

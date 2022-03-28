@@ -1,9 +1,10 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { StepsModule } from 'primeng/steps';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { IApiCoin } from '../home/home.component';
+import { CalendarOptions } from '@fullcalendar/angular'; // useful for typechecking
 
 @Component({
   selector: 'app-daily-task',
@@ -11,6 +12,27 @@ import { IApiCoin } from '../home/home.component';
   styleUrls: ['./daily-task.component.css'],
 })
 export class DailyTaskComponent implements OnInit {
+
+  presenceList: any[] = [];
+
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    height: '100%',
+    locale: 'pt-br',
+    headerToolbar: {
+      left: '',
+      center: '',
+      right: ''
+    },
+    buttonText: {
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Hoje',
+      list: 'Lista'
+    },
+    events: this.presenceList
+  };
 
   items: MenuItem[] = [];
   tasks: any;
@@ -28,8 +50,17 @@ export class DailyTaskComponent implements OnInit {
     SH: 0
   };
   minimunBalance: number = 10000.000000000;
+  taskPage: number = 0;
+  userConfirmActionPartner: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService) {
+  @HostListener('window:focus', ['$event'])
+  onFocus(event: any): void {
+    if (this.userConfirmActionPartner) {
+      this.openConfirmationAction()
+    }
+  }
+
+  constructor(private router: Router, private confirmationService: ConfirmationService, private authService: AuthService) {
     this.navState = router.getCurrentNavigation()?.extras.state;
   }
 
@@ -46,6 +77,13 @@ export class DailyTaskComponent implements OnInit {
       { label: 'HACKER SPACE' }
     ];
     this.tasksConcluidas = 0;
+    let today = new Date();
+    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+    console.log(lastDayOfMonth)
+    for(let i = 0; i < lastDayOfMonth; i++){
+
+    }
+    let novaDataFim = new Date(new Date(today).setDate(new Date(today).getDate()));
   }
 
   async setPageInfo() {
@@ -145,4 +183,51 @@ export class DailyTaskComponent implements OnInit {
     //   this.getTaskInfo();
     // }
   }
+
+  openPartner(partner: string) {
+    let messagePartner: string = '';
+    let urlPartner: string = '';
+    if (partner === 'coinmarketcap') {
+      messagePartner = 'Acesse a pagina e adicione a Stakholders a sua Watchlist (☆), é necessário criar uma conta na plataforma.'
+      urlPartner = 'https://coinmarketcap.com/pt-br/currencies/stakholders';
+    }
+    if (partner === 'coinsniper') {
+      messagePartner = 'Acesse a pagina e adicione a Stakholders a sua Watchlist (☆), é necessário criar uma conta na plataforma.'
+      urlPartner = 'https://coinsniper.net/coin/27218'
+    }
+
+    if (partner === 'coingecko') {
+      messagePartner = 'Acesse a pagina e adicione a Stakholders a sua Watchlist (☆), é necessário criar uma conta na plataforma.'
+      urlPartner = 'https://www.coingecko.com/pt/moedas/stakholders'
+    }
+
+    if (partner === 'coinscope') {
+      messagePartner = 'Acesse a pagina e adicione a Stakholders a sua Watchlist (☆), é necessário criar uma conta na plataforma.'
+      urlPartner = 'https://www.coinscope.co/coin/1-sh'
+    }
+
+    this.confirmationService.confirm({
+      header: partner?.toUpperCase(),
+      message: messagePartner,
+      accept: () => {
+        window.open(urlPartner, 'blank')
+        this.userConfirmActionPartner = true;
+      },
+      reject: () => {
+      }
+    });
+  }
+
+  openConfirmationAction() {
+    this.confirmationService.confirm({
+      header: 'Confirma a Realização da Atividade?',
+      message: 'Periodicamente realizamos auditoria interna, a fim de identificar atividades de usuários, avisamos que o reconhecimento da não conclusão da atividade implicará em banimento e perda dos investimentos.',
+      accept: () => {
+        this.userConfirmActionPartner = false;
+      },
+      reject: () => {
+      }
+    });
+  }
+
 }

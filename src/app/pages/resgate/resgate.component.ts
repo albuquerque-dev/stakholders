@@ -178,8 +178,29 @@ export class ResgateComponent implements OnInit {
       let valor = +(+this.contractCancel.quantidade_compra_usuario - percentual);
       this.contractCancel.total_pelo_cancelamento = +valor;
     }
-    this.contractCancel.data_incio = new Date(this.contractCancel.data_incio.seconds * 1000)
-    this.contractCancel.data_fim = new Date(this.contractCancel.data_fim.seconds * 1000)
-    this.contractCancel.data_compra = new Date(this.contractCancel.data_compra.seconds * 1000)
+    this.contractCancel.data_incio = new Date(this.contractCancel.data_incio)
+    this.contractCancel.data_fim = new Date(this.contractCancel.data_fim)
+    this.contractCancel.data_compra = new Date(this.contractCancel.data_compra)
   }
+
+  verifyContractPeriod(contract: any): any {
+    if (contract?.data_fim) {
+      let dataFim = new Date(contract.data_fim);
+      let dataPermissao = new Date(new Date(dataFim).setDate(dataFim.getDate() - 7))
+      let dataHoje = new Date();
+      let validarData = (dataHoje >= dataPermissao && dataHoje <= dataFim)
+      console.log(validarData, dataPermissao, dataFim, dataHoje)
+      return validarData;
+    }
+  }
+
+  resgatarContrato() {
+    this.selectedMethod = 'resgate';
+    this.showMethodMessage()
+  }
+
+  invalidDate() {
+    window.alert('Resgate Disponivel apenas, 7 dias antes do termino do contrato')
+  }
+
 }

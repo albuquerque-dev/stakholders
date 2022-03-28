@@ -35,17 +35,11 @@
 
   .text-document {
     width: 100%;
-    font-size: 2.6vh !important;
+    font-size: 4vw !important;
     flex-wrap: nowrap !important;
   }
   #content .title span {
     font-size: 3vw !important;
-  }
-  #countdown {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 20px 10px;
   }
 
   #content section ul li {
@@ -55,20 +49,6 @@
 
   .graph-chart .tradingview-widget-container {
     padding: 10px 0px !important;
-  }
-
-  #whitepaper {
-    height: fit-content !important;
-  }
-
-  #tokenomics {
-    height: fit-content !important;
-    padding-bottom: 3rem;
-  }
-
-  #launch {
-    background: #000;
-    min-height: fit-content;
   }
 
   #countdown li {
@@ -581,7 +561,6 @@ video {
   align-items: center;
   background: transparent;
   padding: 5px 0px;
-  height: fit-content !important;
 }
 
 .work-box-bg {
@@ -603,25 +582,16 @@ video {
   position: relative;
 }
 
+.box-card img {
+  width: 50px !important;
+  height: auto;
+}
+
 .box-card {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  height: 350px;
   padding: 0em 3em;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
+  height: 250px;
   flex-direction: column;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   border-radius: 1em;
   background-color: #fff;
@@ -744,7 +714,7 @@ video {
   );
   -webkit-background-clip: text;
   color: #ffffff00;
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 600;
   line-height: 60px;
 }
@@ -1152,10 +1122,6 @@ td {
   font-style: normal;
 }
 
-#launch {
-  background: #000;
-}
-
 /* loader */
 .loader-bg {
   position: fixed;
@@ -1382,11 +1348,37 @@ td {
   }
 }
 
-.table-card{
-  border: 1px solid blue;
+.table-content {
+  color: #8c96a5;
+  font-size: 10px;
 }
 
-.table-info{
-  font-size: 14px;
-  color: #e9ecef;
+.title-tokenomics {
+  background: #212121 !important;
+  padding: 10px;
+  border: 1px solid #323232;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.table-info {
+  font-size: 10px;
+  color: #8c96a5!important;
+  word-break: break-all;
+}
+
+.table-card {
+  background: #212121 !important;
+  border: 1px solid #323232;
+}
+
+#launch {
+  background: #000;
+  height: 100vh;
+  min-height: 100%;
+}
+
+.tokenomics-divider{
+  padding: 5px;
+  border-bottom: 1px solid #323232;
 }

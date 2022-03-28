@@ -38,7 +38,8 @@
           <ng-container *ngIf="!showModalMethod">
             <div class="d-flex flex-column align-items-center">
               <img style="width: 40%; height: auto; cursor: pointer;"
-                (click)="selectedMethod = 'resgate'; this.showMethodMessage()" src="../../../assets/resgate.png">
+                (click)="verifyContractPeriod(contractInfo) ? resgatarContrato() : invalidDate()"
+                src="../../../assets/resgate.png">
               <img style="width: 40%; height: auto; cursor: pointer;" class="mt-3"
                 (click)="selectedMethod = 'cancelamento'; this.showMethodMessage()"
                 src="../../../assets/cancelamento.png">

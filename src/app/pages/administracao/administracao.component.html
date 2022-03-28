@@ -92,11 +92,123 @@
                               <input style="width: 300px;" pInputText type="text" (input)="applyFilterGlobal($event)"
                                 placeholder="Insira sua Busca" />
                             </div>
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-row">
+                              <button (click)="adjustOldContracts()" pButton pRipple style="overflow: inherit;"
+                                label="Ajustar Contratos Vencidos" type="button" icon="pi pi-check"
+                                class="p-button-text p-button-danger">
+                              </button>
                               <button (click)="validateAllContracts()" pButton pRipple style="overflow: inherit;"
                                 label="Aprovar Contratos" type="button" icon="pi pi-check"
                                 class="p-button-text p-button-danger">
                               </button>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-table>
+                    </p-tabPanel>
+                    <p-tabPanel header="À Vencer">
+                      <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="p-datatable-striped"
+                        [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
+                        [style]="{'z-index': '0', 'height': '80vh'}"
+                        [globalFilterFields]="['email','nome','carteira', 'modalidade','hash']">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th class="table-list-col">Nome</th>
+                            <th class="table-list-col">E-mail</th>
+                            <th class="table-list-col">Modalidade</th>
+                            <th pSortableColumn="quantidade_compra_usuario">
+                              <div class="flex justify-content-between align-items-center">
+                                Alugado
+                                <p-sortIcon style="color: white;" field="quantidade_compra_usuario"></p-sortIcon>
+                                <p-columnFilter style="color: white;" type="numeric" field="quantidade_compra_usuario"
+                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
+                              </div>
+                            </th>
+                            <!-- <th class="table-list-col">Compensação SH</th> -->
+                            <th pSortableColumn="total_recebiveis_aluguel">
+                              <div class="flex justify-content-between align-items-center">
+                                Total Recebiveis
+                                <p-sortIcon style="color: white;" field="total_recebiveis_aluguel"></p-sortIcon>
+                                <p-columnFilter style="color: white;" type="numeric" field="total_recebiveis_aluguel"
+                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
+                              </div>
+                            </th>
+                            <th class="table-list-col">Periodo</th>
+                            <th class="table-list-col">Carteira</th>
+                            <th class="table-list-col">Hash</th>
+                            <th class="table-list-col">Quantidade Hash</th>
+                            <th class="table-list-col">Status</th>
+                            <th pSortableColumn="data_incio">
+                              <div class="flex justify-content-between align-items-center">
+                                Data Inicio
+                                <p-sortIcon field="date"></p-sortIcon>
+                                <p-columnFilter type="date" field="data_incio" display="menu" class="ml-auto">
+                                </p-columnFilter>
+                              </div>
+                            </th>
+                            <th pSortableColumn="data_fim">
+                              <div class="flex justify-content-between align-items-center">
+                                Data Fim
+                                <p-sortIcon field="date"></p-sortIcon>
+                                <p-columnFilter type="date" field="data_fim" display="menu" class="ml-auto">
+                                </p-columnFilter>
+                              </div>
+                            </th>
+                            <th class="table-list-col">Ação</th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
+                          <tr *ngIf="(wallet.status === 'aprovado' || wallet.status === 'atualizado') && wallet.vencendo === true"
+                            [ngStyle]="{'color': wallet.quantidade_compra === wallet.quantidade_hash ? 'red' : '' }"
+                            style="border-top: 1px solid black; font-size: 12px;">
+                            <td class="table-list-col">{{wallet.nome}}</td>
+                            <td class="table-list-col">{{wallet.email}}</td>
+                            <td class="table-list-col text-center">
+                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='STAKHOLDERS'"
+                                src="../../../assets/shicon.png" style="width: 30px; height: 40px;">
+                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='BNB'" src="../../../assets/bnbicon.png"
+                                style="width: 30px; height: 40px;">
+                            </td>
+                            <td class="table-list-col"><b>{{+wallet.quantidade_compra_usuario | number:'1.0-3'}}</b>
+                            </td>
+                            <td class="table-list-col"><b>{{+wallet.total_recebiveis_aluguel | currency}}</b></td>
+                            <td class="table-list-col">{{wallet.periodo}}</td>
+                            <td style="cursor: pointer;" class="table-list-col" (click)="checkHashFromBscScan(wallet)">
+                              {{wallet.carteira}}</td>
+                            <td class="table-list-col">
+                              <a [href]="'https://bscscan.com/tx/' + wallet.hash" style="text-decoration: none;"
+                                target="_blank">
+                                <span><b>Visualizar</b></span>
+                              </a>
+                            </td>
+                            <td class="table-list-col">
+                              {{wallet.quantidade_hash | number}}
+                            </td>
+                            <td style="overflow-wrap: anywhere;">
+                              <span [class]="'customer-badge status-' + wallet.status">{{wallet.status}}</span>
+                            </td>
+                            <td class="table-list-col">{{wallet?.data_incio | date:'dd/MM/yy - hh:MM'}}</td>
+                            <td class="table-list-col">{{wallet?.data_fim | date:'dd/MM/yy - hh:MM'}}</td>
+                            <td class="table-list-col">
+                              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                                (click)="this.openContractDetails(wallet)"></button>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="caption">
+                          <div class="d-flex flex-row justify-content-between">
+                            <div class="d-flex flex-column justify-content-center">
+                              <input style="width: 300px;" pInputText type="text" (input)="applyFilterGlobal($event)"
+                                placeholder="Insira sua Busca" />
+                            </div>
+                            <div class="d-flex flex-row">
+                              <button type="button" pButton pRipple icon="pi pi-file-excel"
+                                (click)="exportExcel('aprovado')" class="p-button-success" style="overflow: inherit;"
+                                label="Gerar Excel" pTooltip="Baixar Excel" tooltipPosition="bottom"></button>
+                              <!-- <button (click)="adjustOldContracts()" pButton pRipple style="overflow: inherit;"
+                                label="Ajustar Contratos Vencidos" type="button" icon="pi pi-check"
+                                class="p-button-text p-button-danger">
+                              </button>-->
                             </div>
                           </div>
                         </ng-template>
@@ -206,10 +318,10 @@
                               <button type="button" pButton pRipple icon="pi pi-file-excel"
                                 (click)="exportExcel('aprovado')" class="p-button-success" style="overflow: inherit;"
                                 label="Gerar Excel" pTooltip="Baixar Excel" tooltipPosition="bottom"></button>
-                              <button (click)="adjustOldContracts()" pButton pRipple style="overflow: inherit;"
+                              <!-- <button (click)="adjustOldContracts()" pButton pRipple style="overflow: inherit;"
                                 label="Ajustar Contratos Vencidos" type="button" icon="pi pi-check"
                                 class="p-button-text p-button-danger">
-                              </button>
+                              </button>-->
                             </div>
                           </div>
                         </ng-template>
@@ -450,7 +562,8 @@
                           </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
-                          <tr *ngIf="wallet.status === 'solicitado-cancelamento'"
+                          <tr
+                            *ngIf="wallet.status === 'solicitado-cancelamento' || wallet.status === 'pago-cancelamento'"
                             style="border-top: 1px solid black; font-size: 12px;">
                             <td class="table-list-col">{{wallet.nome}}</td>
                             <td class="table-list-col">{{wallet.email}}</td>
@@ -764,11 +877,12 @@
                             <td>Status</td>
                             <td pEditableColumn>
                               <div class="d-flex flex-row">
-                                <p-dropdown [options]="this.statusList" [(ngModel)]="this.selectedContractStatus"
-                                  optionLabel="name"></p-dropdown>
-                                <button pButton pRipple type="button" icon="pi pi-check"
+                                <p-dropdown [style]="{'font-size': '10px'}" [options]="this.statusList"
+                                  [(ngModel)]="this.selectedContractStatus" optionLabel="name"></p-dropdown>
+                                <button pButton pRipple type="button"
                                   (click)="this.adjustContractField('status', this.selectedContractStatus.code, detail)"
-                                  class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                  class="p-button-rounded p-button-primary p-button-text mr-2"
+                                  label="Confirmar Alteração " style="width: fit-content;"></button>
                               </div>
                             </td>
                           </tr>
@@ -847,7 +961,7 @@
                                     class="p-button-rounded p-button-text p-button-success mr-2"></button>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                  {{detail.quantidade_compra_usuario}}
+                                  {{detail.quantidade_compra_usuario | number}}
                                 </ng-template>
                               </p-cellEditor>
                             </td>
@@ -863,7 +977,7 @@
                                     class="p-button-rounded p-button-text p-button-success mr-2"></button>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                  {{detail.total_pelo_aluguel}}
+                                  {{detail.total_pelo_aluguel | currency}}
                                 </ng-template>
                               </p-cellEditor>
                             </td>
@@ -879,96 +993,57 @@
                                     class="p-button-rounded p-button-text p-button-success mr-2"></button>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                  {{detail.total_recebiveis_aluguel}}
+                                  {{detail.total_recebiveis_aluguel | currency}}
                                 </ng-template>
                               </p-cellEditor>
                             </td>
                           </tr>
+                          <tr *ngIf="detail.modalidade !== 'Bnb'">
+                            <td>Valor a Pagar em Tokens</td>
+                            <td>
+                              {{detail.pagamento_final | number}}
+                            </td>
+                          </tr>
                         </ng-template>
                       </p-table>
-                      <!--
-                      <div class="d-flex flex-row">
-                        <b>Hash:</b> <br>{{this.selectedContractInfo?.hash}}
-                      </div>
-                      <div class="d-flex flex-row justify-content-center">
-                        <a [href]="'https://bscscan.com/tx/' + this.selectedContractInfo.hash"
-                          style="text-decoration: none;" target="_blank">
-                          <span class="customer-badge status-pendente">Visualizar Comprovante</span>
-                        </a>
-                      </div>
-                      <div class="d-flex flex-column w-100">
-                        <div class="d-flex flex-row">
-                          <b>Nome:</b> <small class="ms-2">{{this.selectedContractInfo?.nome}}</small>
-                        </div>
-                        <div class="d-flex flex-row">
-                          <b>E-mail</b> <small class="ms-2">{{this.selectedContractInfo?.email}}</small>
-                        </div>
-                        <div class="d-flex flex-row">
-                          <b>Carteira:</b> <small class="ms-2">{{this.selectedContractInfo?.carteira}}</small>
-                        </div>
-                        <div class="d-flex flex-row">
-                          <b>Moeda:</b> <small class="ms-2">{{this.selectedContractInfo?.modalidade}}</small>
-                        </div>
-                        <div class="d-flex flex-row">
-                          <b>Periodo:</b> <small class="ms-2">{{this.selectedContractInfo?.periodo}}</small>
-                        </div>
-                      </div>
-                      <ng-container *ngIf="this.selectedContractInfo.status !=='solicitado-cancelamento'">
-                        <div class="d-flex flex-row">
-                          <div class="col-6">
-                            <b>Valor Alugado percentual(US$):</b>
-                          </div>
-                          <div class="col-6">
-                            <input type="number" pInputText class="w-100" [(ngModel)]="this.contractUsdValue"
-                              [placeholder]="'US$ ' + this.selectedContractInfo?.total_pelo_aluguel">
-                          </div>
-                        </div>
-                        <div class="d-flex flex-row">
-                          <div class="col-6">
-                            <b>Valor Total + Percentual (US$):</b>
-                          </div>
-                          <div class="col-6">
-                            <input type="number" pInputText class="w-100" [(ngModel)]="this.contractValuePay"
-                              [placeholder]="'US$ ' + this.selectedContractInfo?.total_recebiveis_aluguel">
-                          </div>
-                        </div>
-                      </ng-container>
-                      <div class="d-flex flex-row">
-                        <div class="col-6">
-                          <b>Alugado em Tokens:</b>
-                        </div>
-                        <div class="col-6">
-                          <input type="text" pInputText class="w-100" [(ngModel)]="this.contractQuantity"
-                            [placeholder]="this.selectedContractInfo?.quantidade_compra_usuario">
-                        </div>
-                      </div>
-                      <ng-container *ngIf="this.selectedContractInfo.status ==='solicitado-cancelamento'">
-                        <div class="d-flex flex-row">
-                          <div class="col-6">
-                            <b>Quantidade pelo Cancelamento:</b>
-                          </div>
-                          <div class="col-6">
-                            <input type="number" pInputText class="w-100" [(ngModel)]="this.contractCancelQty"
-                              [placeholder]="this.selectedContractInfo?.total_pelo_cancelamento">
-                          </div>
-                        </div>
-                      </ng-container>
-                      <div class="field col-12 mt-3 mb-3 d-flex flex-column">
-                        Alterar Status Contrato:
-                        <p-dropdown [options]="this.statusList" [(ngModel)]="this.selectedContractStatus"
-                          optionLabel="name"></p-dropdown>
-                        <input class="mt-3" style="border-radius: 4px;" placeholder="Insira o Motivo"
-                          *ngIf="this.selectedContractStatus?.code?.toUpperCase() === 'CANCELADO'" type="text"
-                          pInputText [(ngModel)]="contractCancelTextReason" />
-                        <button (click)="changeStatusContract(this.selectedContractInfo)"
-                          class="mt-3 btn btn-danger">Confirmar</button>
-                      </div> -->
                     </ng-template>
 
                     <ng-template pTemplate="footer">
                       <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
                         (click)="hideModalContractInfo(); this.selectedContractInfo = []; this.selectedContractStatus = []"></button>
                     </ng-template>
+                  </p-dialog>
+
+                  <p-dialog [(visible)]="openSelectPeriodo" [breakpoints]="{'960px': 'fit-content'}"
+                    [style]="{height: '70vh', width: '95vw'}" header="Detalhamento do Excel" [modal]="true"
+                    styleClass="p-fluid">
+                    <table>
+                      <tr>
+                        <td>Selecione o Periodo</td>
+                        <td>
+                          <div class="d-flex flex-row">
+                            <p-dropdown [style]="{'font-size': '10px'}" [options]="this.periodList"
+                              [(ngModel)]="this.selectedPeriodExcel" optionLabel="name"></p-dropdown>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Selecione o Status</td>
+                        <td>
+                          <div class="d-flex flex-row">
+                            <p-dropdown [style]="{'font-size': '10px'}" [options]="this.excelList"
+                              [(ngModel)]="this.selectedStatusExcel" optionLabel="name"></p-dropdown>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <button pButton pRipple type="button"
+                          (click)="this.choosePeriodoToExcel(this.selectedStatusExcel.code, this.selectedPeriodExcel.code)"
+                          class="p-button-primary mr-2" label="Confirmar"></button>
+                      </tr>
+                    </table>
+                    <button pButton pRipple label="Fechar" class="p-button-alert mt-5"
+                      (click)="this.openSelectPeriodo = false;"></button>
                   </p-dialog>
                   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
                 </div>

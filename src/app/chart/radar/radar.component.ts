@@ -75,8 +75,8 @@ export class RadarComponent implements OnInit {
       var objDatas: any = [];
       data.map((d: any) => {
         if (d.modalidade && d.status && d.data_compra) {
-          var tempData = new Date(d.data_compra?.seconds * 1000).toLocaleDateString();
-          var result = data.filter((d: any) => new Date(d.data_compra?.seconds * 1000).toLocaleDateString() === tempData)?.length;
+          var tempData = new Date(d.data_compra).toLocaleDateString();
+          var result = data.filter((d: any) => new Date(d.data_compra).toLocaleDateString() === tempData)?.length;
           var tempObj = { qtddata: result, data: tempData, data_compare: (d.data_compra?.seconds * 1000) }
           let objExist = objDatas?.filter((d: any) => d.data == tempData)
           if (objExist.length == 0) {
@@ -123,7 +123,7 @@ export class RadarComponent implements OnInit {
     this.svg.selectAll(".tick text")
       .style("color", '#fff')
       .call(this.wrap, xScale.step())
-      .style("font", "8px Arial");
+      .style("font", "4px Arial");
 
     this.svg.append("g")
       .append("path")
