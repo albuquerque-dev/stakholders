@@ -270,9 +270,16 @@ input::placeholder {
 }
 
 .icon-card-box {
-  background: #2a9fd6;
-  border-radius: 100%;
+  /* background: #2a9fd6;
+  border-radius: 100%; */
   height: auto;
   width: 40px;
-  padding: 3px;
+  /* padding: 3px; */
+}
+::ng-deep .fc.fc-theme-standard .fc-view-harness .fc-view {
+  background: black;
+}
+
+::ng-deep .fc.fc-theme-standard a {
+  color: #e9ecef;
 }

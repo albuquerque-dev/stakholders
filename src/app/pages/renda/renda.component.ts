@@ -449,7 +449,7 @@ export class RendaComponent implements OnInit, OnChanges {
       this.userHaveContract = false;
     }
 
-    this.reportContractsData = dbResult.docs.map((d: any) => ({ id: d.id, ...d.data() }))
+    this.reportContractsData = dbResult.docs.map((d: any) => ({ id: d.id, path: d.ref.path, ...d.data() }))
     this.reportContractsData.map((d: any) => {
       if (d.data_incio?.seconds && d.data_compra?.seconds && d.data_fim?.seconds) {
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
@@ -569,7 +569,7 @@ export class RendaComponent implements OnInit, OnChanges {
       this.showLoading = true;
       await this.authService.backupContract(this.contractSelectedUpdate.uid, this.contractSelectedUpdate)
       await this.authService.addDocumentTo(this.contractSelectedUpdate.uid, this.contractSelectedUpdate.id, this.updateObjContract, 'atualizacao')
-      await this.authService.changeContractStatus(this.contractSelectedUpdate.uid, this.contractSelectedUpdate.id, this.updateObjContract)
+      await this.authService.changeContractStatus(this.contractSelectedUpdate.path, this.updateObjContract)
       this.showLoading = false;
       this.clearContract()
     }
@@ -598,7 +598,7 @@ export class RendaComponent implements OnInit, OnChanges {
 
   async adjustOldContracts() {
     this.reportContractsData.map(async (d: any) => {
-      if (d.status === 'aprovado' && d.uid && d.id && d.data_incio && d.data_fim && d.data_compra) {
+      if ((d.status === 'aprovado' || d.status === 'atualizado') && d.uid && d.id && d.data_incio && d.data_fim && d.data_compra) {
         let dataInicio = new Date(d.data_incio);
         let dataFim = new Date(d.data_fim);
         let dataHoje = new Date();
@@ -607,7 +607,7 @@ export class RendaComponent implements OnInit, OnChanges {
           console.log('oi')
           let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo));
           console.log(dataFim, novaDataFim, dataHoje)
-          await this.authService.changeContractStatus(d.uid.trim(), d.contract_id.trim(), { data_incio: dataFim, data_fim: novaDataFim })
+          await this.authService.changeContractStatus(d.path, {data_fim_antes_att:d.data_fim, data_incio: dataFim, data_fim: novaDataFim, status: 'atualizado' })
           await this.authService.backupEditedContract(d.uid.trim(), d)
           await this.getReportFromContracts()
         }

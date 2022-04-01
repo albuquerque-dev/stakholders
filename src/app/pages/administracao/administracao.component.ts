@@ -80,6 +80,10 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   selectedStatusExcel: any;
   excelList: any;
   invalidContracts: any;
+  updatedContracts: any;
+  updateStatus: any;
+  contratosVencendo: any;
+  contratosResgatados: any;
 
   constructor(private _renderer2: Renderer2,
     private router: Router,
@@ -107,6 +111,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       await this.getContractInfos();
       await this.consultUserInfo();
       console.log(this.contractsDataReport)
+
       this.cols = [
         { field: 'nome', header: 'Periodo' },
         { field: 'email', header: 'Nome' },
@@ -117,6 +122,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         { field: 'hash', header: 'Hash' },
         { field: 'status', header: 'Status' },
       ];
+
       this.exportColumns = this.cols.map((col: any) => ({ title: col.header, dataKey: col.field }));
       this.statuses = [
         { label: "Pendente", value: "pendente" },
@@ -124,6 +130,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         { label: "Aprovado", value: "aprovado" },
         { label: "Em Análise", value: "analise" }
       ];
+
       this.excelList = [
         { name: "Todos", code: "todos" },
         { name: "Á Vencer", code: "vencendo" },
@@ -132,6 +139,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         { name: "Resgatados", code: 'resgatado' },
         { name: "Solicitado Cancelamento", code: 'solicitado-cancelamento' }
       ]
+
       this.periodList = [
         { name: "Todos", code: "todos" },
         { name: "30 Dias", code: "30" },
@@ -140,20 +148,25 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         { name: "120 Dias", code: "120" },
         { name: "150 Dias", code: "150" },
       ]
+
       this.paidStatus = [
         { name: "Resgatado", code: "resgatado" },
         { name: "Pago", code: "pago" },
       ]
+
       this.cancelStatus = [
         { name: "Solicitado Cancelamento", code: "solicitado-cancelamento" },
         { name: "Pago", code: "pago-cancelamento" },
       ]
+
       this.contractStatus = [
         { name: 'Aprovado', code: 'aprovado' },
         { name: 'Cancelado', code: 'cancelado' },
         { name: 'Em Análise', code: 'analise' },
         { name: 'Pendente', code: 'pendente' },
+        { name: 'Atualização Paga', code: 'pago-atualizacao' }
       ];
+
       this.adminBar = [{
         label: 'Painel',
         icon: 'pi pi-fw pi-pencil',
@@ -162,12 +175,23 @@ export class AdministracaoComponent implements OnInit, OnChanges {
           { label: 'Listagem de Usuários', icon: 'pi pi-fw pi-trash', command: () => { this.relatorioContratoAluguel = false; this.relatorioUsuarios = true } }
         ]
       }
+
       ];
       this.showLoading = false;
     } else {
       window.alert('Acesso não autorizado.')
       this.authService.logout();
     }
+  }
+
+  async adjustCarteirasUppercase() {
+    this.contractsDataReport.forEach((d: any) => {
+      if (d?.uid && d?.contract_id && d.carteira) {
+        console.log(d)
+        let newCarteira = d.carteira.toLowerCase();
+        this.authService.changeContractStatus(d.path, { carteira: newCarteira })
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -193,25 +217,31 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   }
 
   async getContractInfos() {
+    this.contratosVencendo = [];
     let getContractsReports: any = await this.authService.getAllContractInfo();
-    this.contractsDataReport = getContractsReports.docs.map((d: any) => ({ contract_id: d.id, ...d.data() }));
+    this.contractsDataReport = getContractsReports.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
+    let updatedContracts: any = await this.authService.getAllContractUpdate();
+    this.updatedContracts = updatedContracts.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
+    let resgatados: any = await this.authService.getAllContractResgate();
+    this.contratosResgatados = resgatados.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
+    let controle = 0;
     this.contractsDataReport.map(async (d: any) => {
       if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
         d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_incio: d.data_incio })
+        await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio })
       }
 
       if (d?.uid && d?.contract_id && d.data_compra.seconds) {
         console.log(d)
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_compra: d.data_compra })
+        await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra })
       }
 
       if (d?.uid && d?.contract_id && d.data_fim.seconds) {
         console.log(d)
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_fim: d.data_fim })
+        await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim })
       }
       delete d.compensacao_stakholders;
       delete d.bonificacao;
@@ -236,16 +266,51 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       if (d.status === 'aprovado' || d.status === 'atualizado') {
         let today = new Date();
         let dataFim = new Date(d.data_fim);
-        let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 7));
-        let futureDate = new Date(new Date(dataFim).setDate(new Date(dataFim).getDate() + 1));
+        let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 10));
+        let futureDate = new Date(new Date(dataFim).setDate(new Date(dataFim).getDate() + 10));
         if (today >= sevenDays && today <= futureDate) {
           d.vencendo = true;
+          this.contratosVencendo.push(d);
         }
         delete d.total_resgate;
         delete d.total_pelo_cancelamento;
         (this.totalValueUsd += +d.total_recebiveis_aluguel || 0); (this.percentlValueUsd += +d.total_pelo_aluguel || 0)
       }
     });
+    this.updatedContracts.map((d: any) => {
+      delete d.total_resgate;
+      delete d.total_pelo_cancelamento;
+      delete d.compensacao_stakholders;
+      delete d.bonificacao;
+      delete d.rendimento_usuario_usd;
+      delete d.rendimento_usuario;
+      delete d.param;
+      delete d.saldo_usuario_sh;
+      delete d.saldo_usuario_bnb;
+      d.cotacao_sh_atual = this.cotacaoValoresSHUSD;
+      d.cotacao_bnb_atual = this.cotacaoValoresBNBUSD;
+      if (d.status === 'aprovado' || d.status === 'atualizado') {
+        let today = new Date();
+        let dataFim = new Date(d.data_fim);
+        let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 7));
+        let futureDate = new Date(new Date(dataFim).setDate(new Date(dataFim).getDate() + 1));
+        if (today >= sevenDays && today <= futureDate) {
+          d.vencendo = true;
+          this.contratosVencendo.push(d);
+        }
+        if (d.modalidade === 'Stakholders') {
+          d.pagamento_final = (+d.total_pelo_aluguel / +this.cotacaoValoresSHUSD)
+          let valorDolar = +(+d.total_recebiveis_aluguel - +d.total_pelo_aluguel)
+          let valorUnitario = +(valorDolar / +d.quantidade_compra_usuario).toFixed(6)
+          d.cotacao_sh = (+valorUnitario)
+        } else if (d.modalidade === 'Bnb') {
+          d.pagamento_final = (+d.total_pelo_aluguel / +this.cotacaoValoresBNBUSD)
+          let valorDolar = +(+d.total_recebiveis_aluguel - +d.total_pelo_aluguel)
+          let valorUnitario = +(valorDolar / +d.quantidade_compra_usuario).toFixed(2)
+          d.cotacao_bnb = (+valorUnitario)
+        }
+      }
+    })
     this.contractsDataReport = this.contractsDataReport.sort(function (a: any, b: any) {
       return b?.status?.localeCompare(a?.status)
     });
@@ -258,6 +323,34 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         d.quantidade_hash = quantidadeAjustada;
       }
     })
+
+    this.contratosResgatados.map((d: any) => {
+      delete d.total_resgate;
+      delete d.total_pelo_cancelamento;
+      delete d.compensacao_stakholders;
+      delete d.bonificacao;
+      delete d.rendimento_usuario_usd;
+      delete d.rendimento_usuario;
+      delete d.param;
+      delete d.saldo_usuario_sh;
+      delete d.saldo_usuario_bnb;
+      d.cotacao_sh_atual = this.cotacaoValoresSHUSD;
+      d.cotacao_bnb_atual = this.cotacaoValoresBNBUSD;
+      if (d.status === 'resgatado' || d.status === 'pago') {
+        if (d.modalidade === 'Stakholders') {
+          d.pagamento_final = (+d.total_pelo_aluguel / +this.cotacaoValoresSHUSD)
+          let valorDolar = +(+d.total_recebiveis_aluguel - +d.total_pelo_aluguel)
+          let valorUnitario = +(valorDolar / +d.quantidade_compra_usuario).toFixed(6)
+          d.cotacao_sh = (+valorUnitario)
+        } else if (d.modalidade === 'Bnb') {
+          d.pagamento_final = (+d.total_pelo_aluguel / +this.cotacaoValoresBNBUSD)
+          let valorDolar = +(+d.total_recebiveis_aluguel - +d.total_pelo_aluguel)
+          let valorUnitario = +(valorDolar / +d.quantidade_compra_usuario).toFixed(2)
+          d.cotacao_bnb = (+valorUnitario)
+        }
+      }
+    })
+    this.contratosResgatados = this.contractsDataReport;
     this.showLoading = false;
   }
 
@@ -315,7 +408,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
             console.log([quantidadeComparar, contrato.quantidade_compra_usuario, contrato.total_pelo_aluguel, totalRecebiveisAluguelUsd, contrato.total_recebiveis_aluguel, +outputEntryUsd])
           } else {
             console.log();
-            this.authService.changeContractStatus(contrato?.uid?.trim(), contrato.contract_id, { quantidade_compra_usuario: +quantidadeAjustada, total_pelo_aluguel: +totalRecebiveisAluguelUsd, total_recebiveis_aluguel: +outputEntryUsd })
+            this.authService.changeContractStatus(contrato.path, { quantidade_compra_usuario: +quantidadeAjustada, total_pelo_aluguel: +totalRecebiveisAluguelUsd, total_recebiveis_aluguel: +outputEntryUsd })
             console.log('ajustado')
           }
         }
@@ -326,26 +419,51 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     })
   }
 
-  adjustOldContractValues() {
-    this.adjustContractValues(this.contractsDataReport)
-  }
-
   adjustOldContracts() {
-    window.alert("Atualizando Contratos");
-    this.contractsDataReport.forEach((d: any) => {
-      if (d.status === 'aprovado' && d.uid && d.contract_id && d.data_incio && d.data_fim && d.data_compra) {
-        let dataInicio = new Date(d.data_incio);
-        let dataFim = new Date(d.data_fim);
-        let dataHoje = new Date();
-        if (dataFim < dataHoje) {
-          let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo));
-          console.log(dataFim, novaDataFim, dataHoje)
-          this.authService.changeContractStatus(d.uid.trim(), d.contract_id.trim(), { data_incio: dataFim, data_fim: novaDataFim })
-        }
-        // this.authService.changeContractStatus(element?.uid?.trim(), element.contract_id, {})
+    // window.alert("Atualizando Contratos");
+    console.log(this.contractsDataReport.length);
+    this.contractsDataReport.map((d: any) => {
+      let dataInicio = new Date(d.data_incio)
+      let dataFim = new Date(d.data_fim)
+      let dataHoje = new Date()
+      let dataCompra = new Date(d.data_compra)
+      let dataCompraNew = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + 3));
+      if (dataFim < dataHoje && (d.status === 'atualizado' || d.status === 'aprovado')) {
+        let dataInicioNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate())).toUTCString();
+        let dataFimNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo)).toUTCString();
+        // this.authService.changeContractStatus(d.path, { data_incio: dataInicioNova, data_fim: dataFimNova, status: 'atualizado' })
       }
+
+      // if (dataCompra > dataCompraNew) {
+      let dataFimAtt = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + +d.periodo)).toUTCString();
+      this.authService.changeContractStatus(d.path, { data_fim_antes_att: dataFimAtt })
+      // }
+      // if (d?.path && d.data_incio?.seconds) {
+      //   console.log(d)
+      //   d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
+      //   await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio })
+      // }
+
+      // if (d?.path && d.data_compra?.seconds) {
+      //   console.log(d)
+      //   d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
+      //   await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra })
+      // }
+
+      // if (d?.path && d.data_fim?.seconds) {
+      //   console.log(d)
+      //   d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
+      //   await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim })
+      // }
+
+      // if ((d.status === 'aprovado' || d.status === 'atualizado') && d.path && d.data_incio && d.data_fim && d.data_compra) {
+      // if (dataFim < dataHoje) {
+      // let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo)).toUTCString();
+      // console.log(dataFim, novaDataFim, dataHoje)
+      // await this.authService.changeContractStatus(d.path, { data_fim_antes_att: d.data_fim, data_incio: dataFim, data_fim: novaDataFim, status: 'atualizado' })
+      // }
+      // }
     });
-    window.alert("Contratos Atualizados");
   }
 
   exportExcel(path: string) {
@@ -363,9 +481,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       } else if (periodo === 'todos' && path !== 'todos' && path !== 'vencendo') {
         dataToExcel = this.contractsDataReport.filter((d: any) => d.path === path);
       } else if (periodo === 'todos' && path === 'vencendo') {
-        dataToExcel = this.contractsDataReport.filter((d: any) => d.vencendo === true);
+        dataToExcel = this.contratosVencendo;
       } else if (periodo !== 'todos' && path === 'vencendo') {
-        dataToExcel = this.contractsDataReport.filter((d: any) => d.vencendo === true && +d.periodo === +periodo);
+        dataToExcel = this.contratosVencendo.filter((d: any) => d.vencendo === true && +d.periodo === +periodo);
       } else {
         dataToExcel = this.contractsDataReport.filter((d: any) => d.status === path && +d.periodo === +periodo && (d.status !== 'pago' || d.status !== 'pago-cancelamento'))
       }
@@ -383,9 +501,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
   exportInvalidContracts() {
     this.invalidContracts = [];
-    this.contractsDataReport.map( (d: any) => {
+    this.contractsDataReport.map((d: any) => {
       if (d.status === 'aprovado') {
-        let objTemp:any =  this.authService.verifyHashTransaction(d?.carteira?.toLowerCase()?.trim())
+        let objTemp: any = this.authService.verifyHashTransaction(d?.carteira?.toLowerCase()?.trim())
         if (objTemp && objTemp.status === '1') {
           let transaction = objTemp?.result?.filter((c: any) => c.hash?.toLowerCase() === d.hash?.trim()?.toLowerCase())
           if (transaction[0]?.length > 0 &&
@@ -415,7 +533,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async consultUserInfo() {
     this.showLoading = true;
     let getContractsReports: any = await this.authService.getAllUSerInfo();
-    this.userDataReport = getContractsReports.docs.map((d: any) => ({ user_id: d.id, ...d.data() }));
+    this.userDataReport = getContractsReports.docs.map((d: any) => ({ user_id: d.id, path: d.ref.path, ...d.data() }));
     this.userDataReport.sort(function (a: any, b: any) {
       return (a?.nome) - (b?.nome)
     });
@@ -469,7 +587,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
             transaction[0]?.value?.includes(+contrato.quantidade_compra_usuario?.toString()?.replace(',', '')?.replace('.', '')) &&
             transaction[0]?.from.toLowerCase() === contrato.carteira?.toLowerCase() &&
             transaction[0]?.to === '0x8d151d900fc5c85ea7b032cd5deac0c2c577240a') {
-            this.authService.changeContractStatus(contrato.uid, contrato.contract_id, { status: 'aprovado' })
+            this.authService.changeContractStatus(contrato.path, { status: 'aprovado' })
             console.log('aprovado')
           } else {
             console.log([contrato, transaction[0]])
@@ -483,9 +601,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     try {
       if (this.selectedContractStatus && this.selectedContractStatus.code) {
         if (this.selectedContractStatus?.code?.toUpperCase() === 'CANCELADO' || this.selectedContractStatus?.code?.toUpperCase() === 'ANALISE') {
-          await this.authService.changeContractStatus(contract.uid, contract.contract_id, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason })
+          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason })
         } else {
-          await this.authService.changeContractStatus(contract.uid, contract.contract_id, { status: this.selectedContractStatus?.code })
+          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code })
         }
       }
       if (this.contractUsdValue && this.contractUsdValue > 0) {
@@ -495,10 +613,10 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         await this.changeContractValuePayment(contract);
       }
       if (this.contractQuantity && this.contractQuantity > 0) {
-        await this.authService.changeContractStatus(contract.uid, contract.contract_id, { quantidade_compra_usuario: this.contractQuantity })
+        await this.authService.changeContractStatus(contract.path, { quantidade_compra_usuario: this.contractQuantity })
       }
       if (this.contractCancelQty && this.contractCancelQty > 0) {
-        await this.authService.changeContractStatus(contract.uid, contract.contract_id, { total_pelo_cancelamento: this.contractCancelQty })
+        await this.authService.changeContractStatus(contract.path, { total_pelo_cancelamento: this.contractCancelQty })
       }
       await this.clearData()
       await this.getContractInfos();
@@ -510,7 +628,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValueUsd(contract: any) {
     try {
       if (this.contractUsdValue) {
-        await this.authService.changeContractStatus(contract.uid, contract.contract_id, { total_pelo_aluguel: this.contractUsdValue })
+        await this.authService.changeContractStatus(contract.path, { total_pelo_aluguel: this.contractUsdValue })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
@@ -520,7 +638,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValuePayment(contract: any) {
     try {
       if (this.contractValuePay) {
-        await this.authService.changeContractStatus(contract.uid, contract.contract_id, { total_recebiveis_aluguel: this.contractValuePay })
+        await this.authService.changeContractStatus(contract.path, { total_recebiveis_aluguel: this.contractValuePay })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
@@ -703,7 +821,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
           let valor_quantidade = +(valorCorrigido).toFixed(2);
           let total_pelo_aluguel = +(calculoPercentual - calculoMoeda).toFixed(2);
           let total_recebiveis_aluguel = +(calculoPercentual).toFixed(2);
-          await this.authService.changeContractStatus(element.uid, element.id, { valor_quantidade: valor_quantidade, total_pelo_aluguel: total_pelo_aluguel, total_recebiveis_aluguel: total_recebiveis_aluguel })
+          await this.authService.changeContractStatus(element.path, { valor_quantidade: valor_quantidade, total_pelo_aluguel: total_pelo_aluguel, total_recebiveis_aluguel: total_recebiveis_aluguel })
         }
       }
     });
@@ -717,7 +835,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async adjustContractField(param: any, field: any, contract: any) {
     this.showLoading = true;
     try {
-      await this.authService.changeContractStatus(contract.uid, contract.contract_id, { [param]: field });
+      await this.authService.changeContractStatus(contract.path, { [param]: field });
       await this.authService.backupEditedContract(contract.uid, contract);
     } catch (error) {
       window.alert('Erro ao atualizar contrato')
@@ -730,7 +848,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
   async adjustDates() {
     let getContractsReports: any = await this.authService.getAllContractInfo();
-    let result = getContractsReports.docs.map((d: any) => ({ contract_id: d.id, ...d.data() }));
+    let result = getContractsReports.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
     result.forEach(async (d: any) => {
       // if (d?.uid && d?.contract_id && !d.data_incio.seconds && !d.data_compra.seconds && !d.data_fim.seconds) {
       // console.log(d)
@@ -750,19 +868,19 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
         d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_incio: d.data_incio })
+        await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio })
       }
 
       if (d?.uid && d?.contract_id && d.data_compra.seconds) {
         console.log(d)
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_compra: d.data_compra })
+        await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra })
       }
 
       if (d?.uid && d?.contract_id && d.data_fim.seconds) {
         console.log(d)
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.uid, d.contract_id, { data_fim: d.data_fim })
+        await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim })
       }
 
       if (new Date(d.data_incio) && new Date(d.data_fim)) {

@@ -108,9 +108,9 @@
                     </p-tabPanel>
                     <p-tabPanel header="À Vencer">
                       <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="p-datatable-striped"
-                        [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
+                        [value]="this.contratosVencendo" [scrollable]="true" scrollHeight="flex"
                         [style]="{'z-index': '0', 'height': '80vh'}"
-                        [globalFilterFields]="['email','nome','carteira', 'modalidade','hash']">
+                        [globalFilterFields]="['email','nome','carteira', 'modalidade','hash', 'data_fim']">
                         <ng-template pTemplate="header">
                           <tr>
                             <th class="table-list-col">Nome</th>
@@ -120,8 +120,6 @@
                               <div class="flex justify-content-between align-items-center">
                                 Alugado
                                 <p-sortIcon style="color: white;" field="quantidade_compra_usuario"></p-sortIcon>
-                                <p-columnFilter style="color: white;" type="numeric" field="quantidade_compra_usuario"
-                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
                               </div>
                             </th>
                             <!-- <th class="table-list-col">Compensação SH</th> -->
@@ -129,8 +127,6 @@
                               <div class="flex justify-content-between align-items-center">
                                 Total Recebiveis
                                 <p-sortIcon style="color: white;" field="total_recebiveis_aluguel"></p-sortIcon>
-                                <p-columnFilter style="color: white;" type="numeric" field="total_recebiveis_aluguel"
-                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
                               </div>
                             </th>
                             <th class="table-list-col">Periodo</th>
@@ -141,24 +137,20 @@
                             <th pSortableColumn="data_incio">
                               <div class="flex justify-content-between align-items-center">
                                 Data Inicio
-                                <p-sortIcon field="date"></p-sortIcon>
-                                <p-columnFilter type="date" field="data_incio" display="menu" class="ml-auto">
-                                </p-columnFilter>
+                                <p-sortIcon field="data_incio"></p-sortIcon>
                               </div>
                             </th>
                             <th pSortableColumn="data_fim">
                               <div class="flex justify-content-between align-items-center">
                                 Data Fim
-                                <p-sortIcon field="date"></p-sortIcon>
-                                <p-columnFilter type="date" field="data_fim" display="menu" class="ml-auto">
-                                </p-columnFilter>
+                                <p-sortIcon field="data_fim"></p-sortIcon>
                               </div>
                             </th>
                             <th class="table-list-col">Ação</th>
                           </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
-                          <tr *ngIf="(wallet.status === 'aprovado' || wallet.status === 'atualizado') && wallet.vencendo === true"
+                          <tr *ngIf="wallet.vencendo === true"
                             [ngStyle]="{'color': wallet.quantidade_compra === wallet.quantidade_hash ? 'red' : '' }"
                             style="border-top: 1px solid black; font-size: 12px;">
                             <td class="table-list-col">{{wallet.nome}}</td>
@@ -432,7 +424,7 @@
                     </p-tabPanel>
                     <p-tabPanel header="Resgatados">
                       <p-table #dt [lazy]="false" id="table-list-adm" styleClass="table-walet-result"
-                        [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
+                        [value]="this.contratosResgatados" [scrollable]="true" scrollHeight="flex"
                         [style]="{'z-index': '0', 'height': '80vh'}"
                         [globalFilterFields]="['email','nome','carteira', 'modalidade','hash']">
                         <ng-template pTemplate="header">
@@ -745,6 +737,12 @@
                             </td>
                             <td style="flex: 1">
                               {{totalValueUsd - percentlValueUsd | currency}}
+                            </td>
+                          </tr>
+                          <tr style="border-top: 1px solid black; font-size: 12px;">
+                            <td>Ajustar Carteiras Para Minusculo</td>
+                            <td>
+                              <button (click)="adjustCarteirasUppercase()" class="p-button">Ajustar</button>
                             </td>
                           </tr>
                         </tbody>

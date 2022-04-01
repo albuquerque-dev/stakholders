@@ -134,7 +134,7 @@ export class ResgateComponent implements OnInit {
 
   async getReportFromContracts() {
     let dbResult = await this.authService.getMyContractInfo(this.userInfo.uid);
-    this.reportContractsData = dbResult.docs.map((d: any) => ({ id: d.id, ...d.data() }))
+    this.reportContractsData = dbResult.docs.map((d: any) => ({ id: d.id, path: d.ref.path, ...d.data() }))
     this.reportContractsData = this.reportContractsData?.reverse();
     if (this.reportContractsData) {
       this.approvedContracts = this.reportContractsData.filter((d: any) => d.status === 'resgatado')
@@ -147,7 +147,7 @@ export class ResgateComponent implements OnInit {
     this.contractResgate.status = 'resgatado'
     await this.authService.addDocumentTo(this.contractResgate.uid, this.contractResgate.id, this.contractResgate, 'resgate')
     await this.authService.backupContract(this.contractResgate.uid, this.contractResgate)
-    await this.authService.changeContractStatus(this.contractResgate.uid, this.contractResgate.id, this.contractResgate)
+    await this.authService.changeContractStatus(this.contractResgate.path, this.contractResgate)
     this.router.navigate(['/renda'])
     this.showLoading = true;
   }
@@ -163,7 +163,7 @@ export class ResgateComponent implements OnInit {
     this.showLoading = true;
     await this.authService.addDocumentTo(this.contractCancel.uid, this.contractCancel.id, this.contractCancel, 'cancelamento')
     await this.authService.backupContract(this.contractCancel.uid, this.contractCancel)
-    await this.authService.changeContractStatus(this.contractCancel.uid, this.contractCancel.id, this.contractCancel)
+    await this.authService.changeContractStatus(this.contractCancel.path, this.contractCancel)
     localStorage.removeItem('contractSelected');
     this.router.navigate(['/renda'])
     this.showLoading = true;

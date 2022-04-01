@@ -1,38 +1,17 @@
-import { Component, HostListener, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { StepsModule } from 'primeng/steps';
 import { ConfirmationService, MenuItem } from 'primeng/api';
-import { IApiCoin } from '../home/home.component';
-import { CalendarOptions } from '@fullcalendar/angular'; // useful for typechecking
+import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular'; // useful for typechecking
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-daily-task',
   templateUrl: './daily-task.component.html',
   styleUrls: ['./daily-task.component.css'],
 })
-export class DailyTaskComponent implements OnInit {
-
-  presenceList: any[] = [];
-
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
-    height: '100%',
-    locale: 'pt-br',
-    headerToolbar: {
-      left: '',
-      center: '',
-      right: ''
-    },
-    buttonText: {
-      today: 'Hoje',
-      month: 'Mês',
-      week: 'Semana',
-      day: 'Hoje',
-      list: 'Lista'
-    },
-    events: this.presenceList
-  };
+export class DailyTaskComponent implements OnInit, AfterViewInit {
 
   items: MenuItem[] = [];
   tasks: any;
@@ -52,6 +31,7 @@ export class DailyTaskComponent implements OnInit {
   minimunBalance: number = 10000.000000000;
   taskPage: number = 0;
   userConfirmActionPartner: boolean = false;
+  presenceList: any = [];
 
   @HostListener('window:focus', ['$event'])
   onFocus(event: any): void {
@@ -60,8 +40,29 @@ export class DailyTaskComponent implements OnInit {
     }
   }
 
-  constructor(private router: Router, private confirmationService: ConfirmationService, private authService: AuthService) {
-    this.navState = router.getCurrentNavigation()?.extras.state;
+  @ViewChild('calendario', { static: false }) calendario!: FullCalendarComponent;
+
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    height: '100%',
+    locale: 'pt-br',
+    headerToolbar: {
+      left: '',
+      center: '',
+      right: ''
+    },
+    buttonText: {
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Hoje',
+      list: 'Lista'
+    },
+  };
+
+  constructor(private router: Router, private confirmationService: ConfirmationService, private authService: AuthService, private datePipe: DatePipe) {
+    // this.navState = router.getCurrentNavigation()?.extras.state;
+
   }
 
   async ngOnInit() {
@@ -77,13 +78,20 @@ export class DailyTaskComponent implements OnInit {
       { label: 'HACKER SPACE' }
     ];
     this.tasksConcluidas = 0;
-    let today = new Date();
-    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
-    console.log(lastDayOfMonth)
-    for(let i = 0; i < lastDayOfMonth; i++){
+  }
 
+  ngAfterViewInit() {
+    let today = new Date();
+    var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    let listFinal = [];
+    this.presenceList = [];
+    for (let i = 1; i < lastDayOfMonth; i++) {
+      let date = new Date(new Date(today).setDate(new Date(today).getDate() - 30 + i))
+      let converted = this.datePipe.transform(date, 'yyyy-MM-dd')
+      listFinal.push({ title: 'PENDENTE' , date: converted, allDay: true, color: '#ff5722' });
     }
-    let novaDataFim = new Date(new Date(today).setDate(new Date(today).getDate()));
+    this.presenceList = listFinal;
+    this.calendarOptions.events = this.presenceList;
   }
 
   async setPageInfo() {

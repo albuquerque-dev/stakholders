@@ -315,12 +315,8 @@ export class AuthService {
       } else {
         url = 'https://api.bscscan.com/api?module=account&action=tokentx&address=' + carteiraInput + '&apikey=7YF5Z835K59ESTEMIT9T9WHVNUS2IPQXKP'
       }
-      setTimeout(async () => {
-        let result = await this.http.get<any>(url).toPromise()
-        if (result?.length > 0) {
-          return result;
-        }
-      }, 1000);
+      let result = await this.http.get<any>(url).toPromise()
+      return result;
     }
   }
 
@@ -639,6 +635,20 @@ export class AuthService {
       .toPromise()
   }
 
+  getAllContractUpdate() {
+    return this.angularFirestore
+      .collectionGroup('atualizacao')
+      .get()
+      .toPromise()
+  }
+
+  getAllContractResgate() {
+    return this.angularFirestore
+      .collectionGroup('resgate')
+      .get()
+      .toPromise()
+  }
+
   getAllUSerInfo() {
     return this.angularFirestore
       .collectionGroup('users')
@@ -653,12 +663,9 @@ export class AuthService {
       .toPromise()
   }
 
-  changeContractStatus(userId: string, contractId: any, status: any) {
+  changeContractStatus(path: string, status: any) {
     return this.angularFirestore
-      .collection('users')
-      .doc(userId)
-      .collection('comprovantes')
-      .doc(contractId)
+      .doc(path)
       .update(status)
   }
 
@@ -718,6 +725,13 @@ export class AuthService {
       .collection('comprovantes')
       .doc(row_id)
       .update(param)
+  }
+
+  updateContract(path: string) {
+    return this.angularFirestore
+      .doc(path)
+      .get()
+      .toPromise()
   }
 
   addErrorInfo(error_type: any, param: any) {

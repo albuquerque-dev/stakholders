@@ -59,6 +59,7 @@ import { FooterComponent } from './site/components/footer/footer.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import { DatePipe } from '@angular/common';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin
@@ -126,7 +127,7 @@ registerLocaleData(ptBr);
     PaginatorModule,
     FullCalendarModule // register FullCalendar with you app
   ],
-  providers: [AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'pt' }, ConfirmationService],
+  providers: [AuthGuard, AuthService, { provide: LOCALE_ID, useValue: 'pt' }, ConfirmationService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
