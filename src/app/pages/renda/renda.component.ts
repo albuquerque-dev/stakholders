@@ -66,7 +66,7 @@ export class RendaComponent implements OnInit, OnChanges {
     this.cotacaoValoresSHUSD = resultSH?.data?.quote[0].price?.toFixed(5);
     let resultBNB = await this.rendaService.getCotationBNBUSD()
     this.cotacaoValoresBNBUSD = resultBNB?.result?.ethusd;
-    await this.adjustOldContracts()
+    // await this.adjustOldContracts()
   }
 
   ngOnChanges() {
@@ -107,11 +107,11 @@ export class RendaComponent implements OnInit, OnChanges {
         this.quantityInsufficient = false;
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresSHUSD;
 
-        if (this.approvedContracts?.length > 0) {
-          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
-          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
-          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
-        }
+        // if (this.approvedContracts?.length > 0) {
+        calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+        this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+        this.inputQuantityUsd = +calculoMoeda
+        // }
 
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
@@ -129,11 +129,11 @@ export class RendaComponent implements OnInit, OnChanges {
       if (this.cotacaoValoresBNBUSD && this.inputQuantityTokens) {
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresBNBUSD;
 
-        if (this.approvedContracts?.length > 0) {
-          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
-          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
-          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
-        }
+        // if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          this.inputQuantityUsd = +calculoMoeda;
+        // }
 
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
         let calculoPercentual = percentual + calculoMoeda;
@@ -156,9 +156,9 @@ export class RendaComponent implements OnInit, OnChanges {
 
 
         if (this.approvedContracts?.length > 0) {
-          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
-          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
-          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          this.inputQuantityUsd = +calculoMoeda;
         }
 
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
@@ -179,9 +179,9 @@ export class RendaComponent implements OnInit, OnChanges {
 
 
         if (this.approvedContracts?.length > 0) {
-          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.12));
-          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.12);
-          this.inputQuantityUsd = +calculoMoeda?.toFixed(2);
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          this.inputQuantityUsd = +calculoMoeda;
         }
 
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
@@ -227,7 +227,7 @@ export class RendaComponent implements OnInit, OnChanges {
               this.msgError = 'Carteira informada na hash diferente da carteira do usuário.'
             }
           } else {
-            this.msgError = 'Hash Invalida, ou ainda não validada, certifique-se que está Hash trata-se de uma transação feita diretamente de sua wallet ou tente novamente após alguns minutos.'
+            this.msgError = 'Hash Pendente de Aprovação via BSC Scan, tente novamente mais tarde. Reinicie o processo utilizando a mesma Hash. OBS.: Não entrar em contato com o suporte para esta questão, apenas aguarde e tente novamente.'
           }
         }
       } else {
@@ -499,8 +499,8 @@ export class RendaComponent implements OnInit, OnChanges {
     let modalidade = contract.modalidade || '';
     let valorReal = +contract.total_recebiveis_aluguel - +contract.total_pelo_aluguel;
     let novoValor = ((+contract.quantidade_compra_usuario * +valorUnitario) || 0).toFixed(2);
-    let valorCorrigido = (+novoValor - (+novoValor * 0.12));
-    this.taxaDescontoAtualizacao = (+novoValor * 0.12);
+    let valorCorrigido = (+novoValor - (+novoValor * 0.06));
+    this.taxaDescontoAtualizacao = (+novoValor * 0.06);
     let today = new Date();
     let nextday = new Date(new Date(contract.data_fim).setDate(new Date(contract.data_fim).getDate() + 1));
     this.updateObjContract = { ...contract };
@@ -569,7 +569,7 @@ export class RendaComponent implements OnInit, OnChanges {
       this.showLoading = true;
       await this.authService.backupContract(this.contractSelectedUpdate.uid, this.contractSelectedUpdate)
       await this.authService.addDocumentTo(this.contractSelectedUpdate.uid, this.contractSelectedUpdate.id, this.updateObjContract, 'atualizacao')
-      await this.authService.changeContractStatus(this.contractSelectedUpdate.path, this.updateObjContract)
+      await this.authService.changeContractComprovantes(this.contractSelectedUpdate.uid, this.contractSelectedUpdate.id, this.updateObjContract)
       this.showLoading = false;
       this.clearContract()
     }
@@ -607,7 +607,7 @@ export class RendaComponent implements OnInit, OnChanges {
           console.log('oi')
           let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo));
           console.log(dataFim, novaDataFim, dataHoje)
-          await this.authService.changeContractStatus(d.path, {data_fim_antes_att:d.data_fim, data_incio: dataFim, data_fim: novaDataFim, status: 'atualizado' })
+          await this.authService.changeContractComprovantes(d.uid, d.id, { data_fim_antes_att: d.data_fim, data_incio: dataFim, data_fim: novaDataFim, status: 'atualizado' })
           await this.authService.backupEditedContract(d.uid.trim(), d)
           await this.getReportFromContracts()
         }

@@ -147,7 +147,7 @@ export class ResgateComponent implements OnInit {
     this.contractResgate.status = 'resgatado'
     await this.authService.addDocumentTo(this.contractResgate.uid, this.contractResgate.id, this.contractResgate, 'resgate')
     await this.authService.backupContract(this.contractResgate.uid, this.contractResgate)
-    await this.authService.changeContractStatus(this.contractResgate.path, this.contractResgate)
+    await this.authService.changeContractComprovantes(this.contractResgate.uid, this.contractResgate.id, this.contractResgate)
     this.router.navigate(['/renda'])
     this.showLoading = true;
   }
@@ -163,7 +163,7 @@ export class ResgateComponent implements OnInit {
     this.showLoading = true;
     await this.authService.addDocumentTo(this.contractCancel.uid, this.contractCancel.id, this.contractCancel, 'cancelamento')
     await this.authService.backupContract(this.contractCancel.uid, this.contractCancel)
-    await this.authService.changeContractStatus(this.contractCancel.path, this.contractCancel)
+    await this.authService.changeContractComprovantes(this.contractCancel.uid, this.contractCancel.id, this.contractCancel)
     localStorage.removeItem('contractSelected');
     this.router.navigate(['/renda'])
     this.showLoading = true;

@@ -669,6 +669,24 @@ export class AuthService {
       .update(status)
   }
 
+  changeContractComprovantes(userId: string, contractId: any, data: any) {
+    return this.angularFirestore
+      .collection('users')
+      .doc(userId)
+      .collection('comprovantes')
+      .doc(contractId)
+      .update(data)
+  }
+
+  changeContractPendente(userId: string, contractId: any, data: any) {
+    return this.angularFirestore
+      .collection('users')
+      .doc(userId)
+      .collection('atualizacao')
+      .doc(contractId)
+      .update(data)
+  }
+
   addDocumentTo(userId: string, contractId: any, data: any, path: string) {
     return this.angularFirestore
       .collection('users')

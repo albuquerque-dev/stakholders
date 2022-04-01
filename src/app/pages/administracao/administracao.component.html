@@ -106,106 +106,6 @@
                         </ng-template>
                       </p-table>
                     </p-tabPanel>
-                    <p-tabPanel header="À Vencer">
-                      <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="p-datatable-striped"
-                        [value]="this.contratosVencendo" [scrollable]="true" scrollHeight="flex"
-                        [style]="{'z-index': '0', 'height': '80vh'}"
-                        [globalFilterFields]="['email','nome','carteira', 'modalidade','hash', 'data_fim']">
-                        <ng-template pTemplate="header">
-                          <tr>
-                            <th class="table-list-col">Nome</th>
-                            <th class="table-list-col">E-mail</th>
-                            <th class="table-list-col">Modalidade</th>
-                            <th pSortableColumn="quantidade_compra_usuario">
-                              <div class="flex justify-content-between align-items-center">
-                                Alugado
-                                <p-sortIcon style="color: white;" field="quantidade_compra_usuario"></p-sortIcon>
-                              </div>
-                            </th>
-                            <!-- <th class="table-list-col">Compensação SH</th> -->
-                            <th pSortableColumn="total_recebiveis_aluguel">
-                              <div class="flex justify-content-between align-items-center">
-                                Total Recebiveis
-                                <p-sortIcon style="color: white;" field="total_recebiveis_aluguel"></p-sortIcon>
-                              </div>
-                            </th>
-                            <th class="table-list-col">Periodo</th>
-                            <th class="table-list-col">Carteira</th>
-                            <th class="table-list-col">Hash</th>
-                            <th class="table-list-col">Quantidade Hash</th>
-                            <th class="table-list-col">Status</th>
-                            <th pSortableColumn="data_incio">
-                              <div class="flex justify-content-between align-items-center">
-                                Data Inicio
-                                <p-sortIcon field="data_incio"></p-sortIcon>
-                              </div>
-                            </th>
-                            <th pSortableColumn="data_fim">
-                              <div class="flex justify-content-between align-items-center">
-                                Data Fim
-                                <p-sortIcon field="data_fim"></p-sortIcon>
-                              </div>
-                            </th>
-                            <th class="table-list-col">Ação</th>
-                          </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
-                          <tr *ngIf="wallet.vencendo === true"
-                            [ngStyle]="{'color': wallet.quantidade_compra === wallet.quantidade_hash ? 'red' : '' }"
-                            style="border-top: 1px solid black; font-size: 12px;">
-                            <td class="table-list-col">{{wallet.nome}}</td>
-                            <td class="table-list-col">{{wallet.email}}</td>
-                            <td class="table-list-col text-center">
-                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='STAKHOLDERS'"
-                                src="../../../assets/shicon.png" style="width: 30px; height: 40px;">
-                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='BNB'" src="../../../assets/bnbicon.png"
-                                style="width: 30px; height: 40px;">
-                            </td>
-                            <td class="table-list-col"><b>{{+wallet.quantidade_compra_usuario | number:'1.0-3'}}</b>
-                            </td>
-                            <td class="table-list-col"><b>{{+wallet.total_recebiveis_aluguel | currency}}</b></td>
-                            <td class="table-list-col">{{wallet.periodo}}</td>
-                            <td style="cursor: pointer;" class="table-list-col" (click)="checkHashFromBscScan(wallet)">
-                              {{wallet.carteira}}</td>
-                            <td class="table-list-col">
-                              <a [href]="'https://bscscan.com/tx/' + wallet.hash" style="text-decoration: none;"
-                                target="_blank">
-                                <span><b>Visualizar</b></span>
-                              </a>
-                            </td>
-                            <td class="table-list-col">
-                              {{wallet.quantidade_hash | number}}
-                            </td>
-                            <td style="overflow-wrap: anywhere;">
-                              <span [class]="'customer-badge status-' + wallet.status">{{wallet.status}}</span>
-                            </td>
-                            <td class="table-list-col">{{wallet?.data_incio | date:'dd/MM/yy - hh:MM'}}</td>
-                            <td class="table-list-col">{{wallet?.data_fim | date:'dd/MM/yy - hh:MM'}}</td>
-                            <td class="table-list-col">
-                              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success"
-                                (click)="this.openContractDetails(wallet)"></button>
-                            </td>
-                          </tr>
-                        </ng-template>
-                        <ng-template pTemplate="caption">
-                          <div class="d-flex flex-row justify-content-between">
-                            <div class="d-flex flex-column justify-content-center">
-                              <input style="width: 300px;" pInputText type="text" (input)="applyFilterGlobal($event)"
-                                placeholder="Insira sua Busca" />
-                            </div>
-                            <div class="d-flex flex-row">
-                              <button type="button" pButton pRipple icon="pi pi-file-excel"
-                                (click)="exportExcel('aprovado')" class="p-button-success" style="overflow: inherit;"
-                                label="Gerar Excel" pTooltip="Baixar Excel" tooltipPosition="bottom"></button>
-                              <!-- <button (click)="adjustOldContracts()" pButton pRipple style="overflow: inherit;"
-                                label="Ajustar Contratos Vencidos" type="button" icon="pi pi-check"
-                                class="p-button-text p-button-danger">
-                              </button>-->
-                            </div>
-                          </div>
-                        </ng-template>
-                      </p-table>
-                    </p-tabPanel>
                     <p-tabPanel header="Aprovados">
                       <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="p-datatable-striped"
                         [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
@@ -319,6 +219,111 @@
                         </ng-template>
                       </p-table>
                     </p-tabPanel>
+                    <p-tabPanel header="Pagamentos Pendentes">
+                      <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="table-walet-result"
+                        [value]="this.updatedContracts" [scrollable]="true" scrollHeight="flex"
+                        [style]="{'z-index': '0', 'height': '80vh'}"
+                        [globalFilterFields]="['email','nome','carteira', 'modalidade','hash']">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th class="table-list-col">Nome</th>
+                            <th class="table-list-col">E-mail</th>
+                            <th class="table-list-col">Modalidade</th>
+                            <th pSortableColumn="quantidade_compra_usuario">
+                              <div class="flex justify-content-between align-items-center">
+                                Alugado
+                                <p-sortIcon style="color: white;" field="quantidade_compra_usuario"></p-sortIcon>
+                                <p-columnFilter style="color: white;" type="numeric" field="quantidade_compra_usuario"
+                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
+                              </div>
+                            </th>
+                            <!-- <th class="table-list-col">Compensação SH</th> -->
+                            <th pSortableColumn="total_recebiveis_aluguel">
+                              <div class="flex justify-content-between align-items-center">
+                                Total Recebiveis
+                                <p-sortIcon style="color: white;" field="total_recebiveis_aluguel"></p-sortIcon>
+                                <p-columnFilter style="color: white;" type="numeric" field="total_recebiveis_aluguel"
+                                  display="menu" currency="USD" class="ml-auto"></p-columnFilter>
+                              </div>
+                            </th>
+                            <th class="table-list-col">Periodo</th>
+                            <th class="table-list-col">Carteira</th>
+                            <th class="table-list-col">BSCScan</th>
+                            <th class="table-list-col">Hash</th>
+                            <th class="table-list-col">Status</th>
+                            <th pSortableColumn="data_incio">
+                              <div class="flex justify-content-between align-items-center">
+                                Data Inicio
+                                <p-sortIcon field="date"></p-sortIcon>
+                                <p-columnFilter type="date" field="data_incio" display="menu" class="ml-auto">
+                                </p-columnFilter>
+                              </div>
+                            </th>
+                            <th pSortableColumn="data_fim">
+                              <div class="flex justify-content-between align-items-center">
+                                Data Fim
+                                <p-sortIcon field="date"></p-sortIcon>
+                                <p-columnFilter type="date" field="data_fim" display="menu" class="ml-auto">
+                                </p-columnFilter>
+                              </div>
+                            </th>
+                            <th class="table-list-col">Ação</th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
+                          <tr *ngIf="wallet.status === 'atualizado'"
+                            style="border-top: 1px solid black; font-size: 12px;">
+                            <td class="table-list-col">{{wallet.nome}}</td>
+                            <td class="table-list-col">{{wallet.email}}</td>
+                            <td class="table-list-col text-center">
+                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='STAKHOLDERS'"
+                                src="../../../assets/shicon.png" style="width: 30px; height: 40px;">
+                              <img *ngIf="wallet?.modalidade?.toUpperCase() =='BNB'" src="../../../assets/bnbicon.png"
+                                style="width: 30px; height: 40px;">
+                            </td>
+                            <td class="table-list-col"><b>{{+wallet.quantidade_compra_usuario | number:'1.0-3'}}</b>
+                            </td>
+                            <td class="table-list-col"><b>{{+wallet.total_recebiveis_aluguel | currency}}</b></td>
+                            <td class="table-list-col">{{wallet.periodo}}</td>
+                            <td style="cursor: pointer;" class="table-list-col">
+                              {{wallet.carteira}}</td>
+                            <td class="table-list-col">
+                              <a [href]="'https://bscscan.com/tx/' + wallet.hash" style="text-decoration: none;"
+                                target="_blank">
+                                <span><b>Visualizar</b></span>
+                              </a>
+                            </td>
+                            <td class="table-list-col">
+                              {{wallet.hash}}
+                            </td>
+                            <td style="overflow-wrap: anywhere;">
+                              <span [class]="'customer-badge status-' + wallet.status">{{wallet.status}}</span>
+                            </td>
+                            <td class="table-list-col">{{wallet?.data_incio | date:'dd/MM/yy - hh:MM'}}</td>
+                            <td class="table-list-col">{{wallet?.data_fim | date:'dd/MM/yy - hh:MM'}}</td>
+                            <td class="table-list-col">
+                              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success"
+                                (click)="this.openContractDetails(wallet)"></button>
+                              <button pButton pRipple icon="pi pi-wallet" class="ms-3 p-button-rounded p-button-danger"
+                                (click)="this.confirmarPagamento(wallet)"></button>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="caption">
+                          <div class="d-flex flex-row justify-content-between">
+                            <div class="d-flex flex-column justify-content-center">
+                              <input style="width: 300px;" pInputText type="text" (input)="applyFilterGlobal($event)"
+                                placeholder="Insira sua Busca" />
+                            </div>
+                            <div class="d-flex flex-row">
+                              <button type="button" pButton pRipple icon="pi pi-file-excel"
+                                (click)="exportExcel('atualizado')" class="p-button-success" style="overflow: inherit;"
+                                label="Gerar Excel" pTooltip="Baixar Excel" tooltipPosition="bottom"></button>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-table>
+                    </p-tabPanel>
                     <p-tabPanel header="Atualizados">
                       <p-table #dt #dtable [lazy]="false" id="table-list-adm" styleClass="table-walet-result"
                         [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
@@ -422,9 +427,9 @@
                         </ng-template>
                       </p-table>
                     </p-tabPanel>
-                    <p-tabPanel header="Resgatados">
+                    <p-tabPanel header="Solicitado Resgate | Pago Rendimento Mensal">
                       <p-table #dt [lazy]="false" id="table-list-adm" styleClass="table-walet-result"
-                        [value]="this.contratosResgatados" [scrollable]="true" scrollHeight="flex"
+                        [value]="this.contractsDataReport" [scrollable]="true" scrollHeight="flex"
                         [style]="{'z-index': '0', 'height': '80vh'}"
                         [globalFilterFields]="['email','nome','carteira', 'modalidade','hash']">
                         <ng-template pTemplate="header">
@@ -461,7 +466,8 @@
                           </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-wallet let-rowIndex="rowIndex">
-                          <tr *ngIf="wallet.status === 'resgatado' || wallet.status === 'pago'"
+                          <tr
+                            *ngIf="wallet.status === 'resgatado' || wallet.status === 'pago' || wallet.status === 'pago-atualizacao' || wallet.status === 'pago-resgate'"
                             style="border-top: 1px solid black; font-size: 12px;">
                             <td class="table-list-col">{{wallet.nome}}</td>
                             <td class="table-list-col">{{wallet.email}}</td>

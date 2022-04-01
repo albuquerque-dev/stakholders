@@ -133,6 +133,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
       this.excelList = [
         { name: "Todos", code: "todos" },
+        { name: "Pagamento Pendente", code: "pagamento-pendente" },
         { name: "Á Vencer", code: "vencendo" },
         { name: "Aprovado", code: 'aprovado' },
         { name: "Atualizados", code: 'atualizado' },
@@ -151,7 +152,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
       this.paidStatus = [
         { name: "Resgatado", code: "resgatado" },
-        { name: "Pago", code: "pago" },
+        { name: "Pago", code: "pago-resgate" },
       ]
 
       this.cancelStatus = [
@@ -161,10 +162,10 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
       this.contractStatus = [
         { name: 'Aprovado', code: 'aprovado' },
+        { name: 'Atualização Paga', code: 'pago-atualizacao' },
         { name: 'Cancelado', code: 'cancelado' },
         { name: 'Em Análise', code: 'analise' },
         { name: 'Pendente', code: 'pendente' },
-        { name: 'Atualização Paga', code: 'pago-atualizacao' }
       ];
 
       this.adminBar = [{
@@ -189,7 +190,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       if (d?.uid && d?.contract_id && d.carteira) {
         console.log(d)
         let newCarteira = d.carteira.toLowerCase();
-        this.authService.changeContractStatus(d.path, { carteira: newCarteira })
+        this.authService.changeContractStatus(d.path, { carteira: newCarteira, path: '', pathc: '' })
       }
     });
   }
@@ -221,10 +222,11 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     let getContractsReports: any = await this.authService.getAllContractInfo();
     this.contractsDataReport = getContractsReports.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
     let updatedContracts: any = await this.authService.getAllContractUpdate();
-    this.updatedContracts = updatedContracts.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
+    this.updatedContracts = updatedContracts.docs.map((d: any) => ({ contract_id: d.id, pathc: d.ref.path, ...d.data() }));
     let resgatados: any = await this.authService.getAllContractResgate();
     this.contratosResgatados = resgatados.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
-    let controle = 0;
+
+
     this.contractsDataReport.map(async (d: any) => {
       if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
@@ -265,9 +267,24 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       }
       if (d.status === 'aprovado' || d.status === 'atualizado') {
         let today = new Date();
+        let dataInicio = new Date(d.data_incio);
         let dataFim = new Date(d.data_fim);
+        let dataFimNova = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + +d.periodo)).toUTCString();
         let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 10));
         let futureDate = new Date(new Date(dataFim).setDate(new Date(dataFim).getDate() + 10));
+        let dataInicioNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - +d.periodo)).toUTCString();
+
+        // this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_incio: dataInicioNova, path: '', pathc: '' })
+
+        if (dataInicio > today && (d.status === 'aprovado' || d.status === 'atualizado')) {
+          console.log(d)
+
+        // this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_incio: d.data_compra, data_fim: dataFimNova, path: '', pathc: '' })
+
+        }
+
+
+
         if (today >= sevenDays && today <= futureDate) {
           d.vencendo = true;
           this.contratosVencendo.push(d);
@@ -278,6 +295,34 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       }
     });
     this.updatedContracts.map((d: any) => {
+      if (d?.pathc && d.data_incio.seconds) {
+        console.log(d)
+        d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
+        this.authService.changeContractStatus(d.pathc, { data_incio: d.data_incio })
+      }
+
+      if (d?.pathc && d.data_compra.seconds) {
+        console.log(d)
+        d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
+        this.authService.changeContractStatus(d.pathc, { data_compra: d.data_compra })
+      }
+
+      if (d?.pathc && d.data_fim.seconds) {
+        console.log(d)
+        d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
+        this.authService.changeContractStatus(d.pathc, { data_fim: d.data_fim })
+      }
+
+      if (d.status === 'pago' || d.status === 'pago-resgate' || d.status === 'pago-atualizacao') {
+        this.contractsDataReport.push(d)
+      }
+      // if (d.status === 'pago' && d.pathc && (d.hash ==
+      // )
+      // ) {
+      //   console.log('ajustado', d)
+      //   // this.authService.changeContractStatus(d.pathc, { status: 'pago-atualizacao', path: '', pathc: '' })
+      // }
+
       delete d.total_resgate;
       delete d.total_pelo_cancelamento;
       delete d.compensacao_stakholders;
@@ -350,6 +395,71 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         }
       }
     })
+
+    this.contractsDataReport.map((d: any) => {
+
+      // let dataFim = new Date(d.data_fim);
+      // let futureDate = new Date(new Date(dataFim).setDate(new Date(dataFim).getDate() - d.periodo)).toUTCString();
+      // if(futureDate){
+      //   this.authService.changeContractStatus(d.path, { data_incio: futureDate })
+      // }
+
+
+      if (d.status === 'atualizado') {
+        let result = this.updatedContracts.filter((e: any) => e.hash === d.hash)
+
+
+        let today = new Date();
+        let dataF = new Date(d.data_fim);
+        let dataI = new Date(d.data_fim);
+        let dataC = new Date(d.data_compra);
+        // let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 7));
+        let futureD = new Date(new Date(dataC).setDate(new Date(dataC).getDate() + 5));
+
+        // console.log(result)
+        // if (result?.length > 0) {
+        // } else {
+        //   let today = new Date();
+        //   let dataFim = new Date(d.data_fim);
+        //   let dataCompra = new Date(d.data_compra);
+        //   let sevenDays = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() - 7));
+        //   let futureDate = new Date(new Date(dataCompra).setDate(new Date(dataCompra).getDate() + d.periodo + 5));
+        //   console.log('igual', d)
+        //   if (futureDate > dataFim) {
+        //     console.log('menor', d)
+        //   } else {
+        //     let dataInicio = new Date(d.data_compra).toUTCString();
+        //     let dataCompra = new Date(d.data_compra);
+        //     let dataF = new Date(new Date(dataCompra).setDate(new Date(dataCompra).getDate() + d.periodo)).toUTCString();
+        //     // this.authService.addDocumentTo(d.uid, d.contract_id, d, 'atualizacao')
+        //     console.log('maior', d)
+        //     this.authService.changeContractStatus(d.pathc, { data_incio: dataInicio, data_fim: dataF, path: '', pathc: '' })
+        //   }
+        // }
+      }
+
+
+      // if (d.status === 'pago' && d.path && (d.hash ==
+      //   '0x26a6ed11508eca007623299c4a5763ff310e346b0772f4191ac2957f72c8ed79' ||
+      //   '0x26a6ed11508eca007623299c4a5763ff310e346b0772f4191ac2957f72c8ed79' ||
+      //   '0xec539bce3678646cbf04226125e922f3c7151541883cbe7faf2491e3aeb8b8ed' ||
+      //   '0xccaad692eb577c79e63e9c2099031da9184131a3d5970c899b00bfd04d87a409' ||
+      //   '0x58d4c3418df84710925aa95c65cb41f65a97876cdb071179a1bf14d77ffa3d83' ||
+      //   '0xe6f3050cca2de3367aff0b19fb1fcb87a318bc556579e44e589d0e6694743ca4' ||
+      //   '0x3fa05b0e4bf528de4fc2e04b62b31845fdc45f12b6c1500d1882cf448cb1cab8' ||
+      //   '0x4781f923a1f8f4f4bb33d7df01b7c2cb7ff0aad6e09a69434ddd7a9957d4711c' ||
+      //   '0xa0a05f05e04605328d908b9fcd2b545db2960546ac01159628cc3fd6e671d446' ||
+      //   '0x26a6ed11508eca007623299c4a5763ff310e346b0772f4191ac2957f72c8ed79'
+      // )
+      // ) {
+      //   console.log('ajustado', d)
+      //   this.authService.changeContractStatus(d.path, { status: 'pago-resgate', path: '', pathc: '' })
+      // }
+
+    })
+
+    let atualizados = this.contractsDataReport.filter((d: any) => d.status === 'atualizado')
+    console.log(atualizados)
     this.contratosResgatados = this.contractsDataReport;
     this.showLoading = false;
   }
@@ -408,7 +518,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
             console.log([quantidadeComparar, contrato.quantidade_compra_usuario, contrato.total_pelo_aluguel, totalRecebiveisAluguelUsd, contrato.total_recebiveis_aluguel, +outputEntryUsd])
           } else {
             console.log();
-            this.authService.changeContractStatus(contrato.path, { quantidade_compra_usuario: +quantidadeAjustada, total_pelo_aluguel: +totalRecebiveisAluguelUsd, total_recebiveis_aluguel: +outputEntryUsd })
+            this.authService.changeContractStatus(contrato.path, { quantidade_compra_usuario: +quantidadeAjustada, total_pelo_aluguel: +totalRecebiveisAluguelUsd, total_recebiveis_aluguel: +outputEntryUsd, path: '', pathc: '' })
             console.log('ajustado')
           }
         }
@@ -428,15 +538,66 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       let dataHoje = new Date()
       let dataCompra = new Date(d.data_compra)
       let dataCompraNew = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + 3));
-      if (dataFim < dataHoje && (d.status === 'atualizado' || d.status === 'aprovado')) {
-        let dataInicioNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate())).toUTCString();
-        let dataFimNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo)).toUTCString();
-        // this.authService.changeContractStatus(d.path, { data_incio: dataInicioNova, data_fim: dataFimNova, status: 'atualizado' })
+
+      if (dataCompraNew < dataInicio && d.status === 'pago') {
+        this.authService.changeContractComprovantes(d.uid, d.contract_id, { status: 'atualizado' })
+        console.log('ok')
       }
 
+      var calculoMoeda, taxaDescontoAtualizacao, inputQuantityUsd, calculoPercentual, valueDifference, totalValue, percentual = 0
+      if (dataFim < dataHoje && (d.status === 'atualizado' || d.status === 'aprovado' && d.valor_quantidade)) {
+        if (d.modalidade === 'Stakholders' && d.valor_quantidade) {
+          this.authService.backupContract(d.uid, d)
+
+          calculoMoeda = d.valor_quantidade;
+
+          // if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          inputQuantityUsd = +calculoMoeda
+          // }
+
+          percentual = d.total_pelo_aluguel;
+          calculoPercentual = percentual + calculoMoeda;
+          // VALOR EM DOLAR
+          inputQuantityUsd = calculoMoeda;
+          // DIFERENÇA A PAGAR
+          d.total_pelo_aluguel = calculoPercentual - calculoMoeda;
+          // VALOR TOTAL
+          d.total_recebiveis_aluguel = calculoPercentual;
+        }
+        if (d.modalidade === 'Bnb' && d.valor_quantidade) {
+          this.authService.backupContract(d.uid, d)
+
+          calculoMoeda = d.valor_quantidade;
+          // if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          inputQuantityUsd = +calculoMoeda;
+          // }
+
+          percentual = d.total_pelo_aluguel;
+          calculoPercentual = percentual + calculoMoeda;
+          // VALOR EM DOLAR
+          inputQuantityUsd = calculoMoeda;
+          // DIFERENÇA A PAGAR
+          d.total_pelo_aluguel = calculoPercentual - calculoMoeda;
+          // VALOR TOTAL
+          d.total_recebiveis_aluguel = calculoPercentual;
+        }
+
+
+        let dataInicioNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate())).toUTCString();
+        let dataFimNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo)).toUTCString();
+        console.log(d, dataInicioNova, dataFimNova)
+        this.authService.changeContractComprovantes(d.uid, d.contract_id, { total_pelo_aluguel: d.total_pelo_aluguel, total_recebiveis_aluguel: d.total_recebiveis_aluguel, path: '', pathc: '', data_incio: dataInicioNova, data_fim: dataFimNova, status: 'atualizado' })
+        this.authService.addDocumentTo(d.uid, d.contract_id, d, 'atualizacao')
+      }
+
+
       // if (dataCompra > dataCompraNew) {
-      let dataFimAtt = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + +d.periodo)).toUTCString();
-      this.authService.changeContractStatus(d.path, { data_fim_antes_att: dataFimAtt })
+      // let dataFimAtt = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + +d.periodo)).toUTCString();
+      // this.authService.changeContractStatus(d.path, { data_fim_antes_att: dataFimAtt, path: '', pathc: '' })
       // }
       // if (d?.path && d.data_incio?.seconds) {
       //   console.log(d)
@@ -474,18 +635,27 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   choosePeriodoToExcel(path: any, periodo: any) {
     let dataToExcel: any;
     if (periodo && path) {
-      if (path === 'todos' && periodo === 'todos') {
-        dataToExcel = this.contractsDataReport;
-      } else if (periodo !== 'todos' && path === 'todos') {
-        dataToExcel = this.contractsDataReport.filter((d: any) => +d.periodo === +periodo);
-      } else if (periodo === 'todos' && path !== 'todos' && path !== 'vencendo') {
-        dataToExcel = this.contractsDataReport.filter((d: any) => d.path === path);
-      } else if (periodo === 'todos' && path === 'vencendo') {
-        dataToExcel = this.contratosVencendo;
-      } else if (periodo !== 'todos' && path === 'vencendo') {
-        dataToExcel = this.contratosVencendo.filter((d: any) => d.vencendo === true && +d.periodo === +periodo);
+      if (path === 'pagamento-pendente') {
+        if (periodo === 'todos') {
+          dataToExcel = this.updatedContracts.filter((d: any) => d.status === 'atualizado');
+        }
+        if (periodo !== 'todos') {
+          dataToExcel = this.updatedContracts.filter((d: any) => d.status === path && +d.periodo === +periodo);
+        }
       } else {
-        dataToExcel = this.contractsDataReport.filter((d: any) => d.status === path && +d.periodo === +periodo && (d.status !== 'pago' || d.status !== 'pago-cancelamento'))
+        if (path === 'todos' && periodo === 'todos') {
+          dataToExcel = this.contractsDataReport;
+        } else if (periodo !== 'todos' && path === 'todos') {
+          dataToExcel = this.contractsDataReport.filter((d: any) => +d.periodo === +periodo);
+        } else if (periodo === 'todos' && path !== 'todos' && path !== 'vencendo') {
+          dataToExcel = this.contractsDataReport.filter((d: any) => d.path === path);
+        } else if (periodo === 'todos' && path === 'vencendo') {
+          dataToExcel = this.contratosVencendo;
+        } else if (periodo !== 'todos' && path === 'vencendo') {
+          dataToExcel = this.contratosVencendo.filter((d: any) => d.vencendo === true && +d.periodo === +periodo);
+        } else {
+          dataToExcel = this.contractsDataReport.filter((d: any) => d.status === path && +d.periodo === +periodo && (d.status !== 'pago' || d.status !== 'pago-cancelamento'))
+        }
       }
     }
     if (periodo && path) {
@@ -587,8 +757,8 @@ export class AdministracaoComponent implements OnInit, OnChanges {
             transaction[0]?.value?.includes(+contrato.quantidade_compra_usuario?.toString()?.replace(',', '')?.replace('.', '')) &&
             transaction[0]?.from.toLowerCase() === contrato.carteira?.toLowerCase() &&
             transaction[0]?.to === '0x8d151d900fc5c85ea7b032cd5deac0c2c577240a') {
-            this.authService.changeContractStatus(contrato.path, { status: 'aprovado' })
-            console.log('aprovado')
+            this.authService.changeContractStatus(contrato.path, { status: 'aprovado', path: '', pathc: '' })
+            // console.log('aprovado')
           } else {
             console.log([contrato, transaction[0]])
           }
@@ -601,9 +771,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     try {
       if (this.selectedContractStatus && this.selectedContractStatus.code) {
         if (this.selectedContractStatus?.code?.toUpperCase() === 'CANCELADO' || this.selectedContractStatus?.code?.toUpperCase() === 'ANALISE') {
-          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason })
+          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason, path: '', pathc: '' })
         } else {
-          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code })
+          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, path: '', pathc: '' })
         }
       }
       if (this.contractUsdValue && this.contractUsdValue > 0) {
@@ -613,10 +783,10 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         await this.changeContractValuePayment(contract);
       }
       if (this.contractQuantity && this.contractQuantity > 0) {
-        await this.authService.changeContractStatus(contract.path, { quantidade_compra_usuario: this.contractQuantity })
+        await this.authService.changeContractStatus(contract.path, { quantidade_compra_usuario: this.contractQuantity, path: '', pathc: '' })
       }
       if (this.contractCancelQty && this.contractCancelQty > 0) {
-        await this.authService.changeContractStatus(contract.path, { total_pelo_cancelamento: this.contractCancelQty })
+        await this.authService.changeContractStatus(contract.path, { total_pelo_cancelamento: this.contractCancelQty, path: '', pathc: '' })
       }
       await this.clearData()
       await this.getContractInfos();
@@ -628,7 +798,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValueUsd(contract: any) {
     try {
       if (this.contractUsdValue) {
-        await this.authService.changeContractStatus(contract.path, { total_pelo_aluguel: this.contractUsdValue })
+        await this.authService.changeContractStatus(contract.path, { total_pelo_aluguel: this.contractUsdValue, path: '', pathc: '' })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
@@ -638,7 +808,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValuePayment(contract: any) {
     try {
       if (this.contractValuePay) {
-        await this.authService.changeContractStatus(contract.path, { total_recebiveis_aluguel: this.contractValuePay })
+        await this.authService.changeContractStatus(contract.path, { total_recebiveis_aluguel: this.contractValuePay, path: '', pathc: '' })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
@@ -789,7 +959,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       await this.validateContract(this.contractsDataReport)
       await this.getContractInfos();
       this.showLoading = false;
-      window.alert('Contratos Aprovados.')
+      // window.alert('Contratos Aprovados.')
     }
   }
 
@@ -821,7 +991,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
           let valor_quantidade = +(valorCorrigido).toFixed(2);
           let total_pelo_aluguel = +(calculoPercentual - calculoMoeda).toFixed(2);
           let total_recebiveis_aluguel = +(calculoPercentual).toFixed(2);
-          await this.authService.changeContractStatus(element.path, { valor_quantidade: valor_quantidade, total_pelo_aluguel: total_pelo_aluguel, total_recebiveis_aluguel: total_recebiveis_aluguel })
+          await this.authService.changeContractStatus(element.path, { valor_quantidade: valor_quantidade, total_pelo_aluguel: total_pelo_aluguel, total_recebiveis_aluguel: total_recebiveis_aluguel, path: '', pathc: '' })
         }
       }
     });
@@ -868,19 +1038,19 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
         d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio })
+        await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio, path: '', pathc: '' })
       }
 
       if (d?.uid && d?.contract_id && d.data_compra.seconds) {
         console.log(d)
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra })
+        await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra, path: '', pathc: '' })
       }
 
       if (d?.uid && d?.contract_id && d.data_fim.seconds) {
         console.log(d)
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim })
+        await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim, path: '', pathc: '' })
       }
 
       if (new Date(d.data_incio) && new Date(d.data_fim)) {
@@ -891,5 +1061,13 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       }
       // }
     });
+  }
+
+  confirmarPagamento(contrato: any): any {
+    if (contrato.contract_id && contrato.uid && contrato.status === "atualizado") {
+      this.authService.changeContractPendente(contrato.uid, contrato.contract_id, { status: 'pago-atualizacao', path: '', pathc: '' })
+      let index = this.updatedContracts.indexOf(contrato);
+      this.updatedContracts.splice(index, 1);
+    }
   }
 }
