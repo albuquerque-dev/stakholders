@@ -766,9 +766,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     try {
       if (this.selectedContractStatus && this.selectedContractStatus.code) {
         if (this.selectedContractStatus?.code?.toUpperCase() === 'CANCELADO' || this.selectedContractStatus?.code?.toUpperCase() === 'ANALISE') {
-          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason, path: '', pathc: '' })
+          await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { status: this.selectedContractStatus?.code, comentario: this.contractCancelTextReason, path: '', pathc: '' })
         } else {
-          await this.authService.changeContractStatus(contract.path, { status: this.selectedContractStatus?.code, path: '', pathc: '' })
+          await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { status: this.selectedContractStatus?.code, path: '', pathc: '' })
         }
       }
       if (this.contractUsdValue && this.contractUsdValue > 0) {
@@ -778,10 +778,10 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         await this.changeContractValuePayment(contract);
       }
       if (this.contractQuantity && this.contractQuantity > 0) {
-        await this.authService.changeContractStatus(contract.path, { quantidade_compra_usuario: this.contractQuantity, path: '', pathc: '' })
+        await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { quantidade_compra_usuario: this.contractQuantity, path: '', pathc: '' })
       }
       if (this.contractCancelQty && this.contractCancelQty > 0) {
-        await this.authService.changeContractStatus(contract.path, { total_pelo_cancelamento: this.contractCancelQty, path: '', pathc: '' })
+        await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { total_pelo_cancelamento: this.contractCancelQty, path: '', pathc: '' })
       }
       await this.clearData()
       await this.getContractInfos();
@@ -793,7 +793,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValueUsd(contract: any) {
     try {
       if (this.contractUsdValue) {
-        await this.authService.changeContractStatus(contract.path, { total_pelo_aluguel: this.contractUsdValue, path: '', pathc: '' })
+        await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { total_pelo_aluguel: this.contractUsdValue, path: '', pathc: '' })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
@@ -803,7 +803,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async changeContractValuePayment(contract: any) {
     try {
       if (this.contractValuePay) {
-        await this.authService.changeContractStatus(contract.path, { total_recebiveis_aluguel: this.contractValuePay, path: '', pathc: '' })
+        await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { total_recebiveis_aluguel: this.contractValuePay, path: '', pathc: '' })
       }
     } catch (error) {
       window.alert('Erro ao alterar contrato')
