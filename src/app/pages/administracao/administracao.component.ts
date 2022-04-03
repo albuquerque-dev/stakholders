@@ -59,6 +59,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   private u3a = 'franchitrader@gmail.com'
   private u4a = 'magnatatoken@gmail.com'
   private u5a = 'chrisedfisica@hotmail.com'
+  private u6a = 'gabrielcarapecovy@gmail.com'
   cotacaoValoresSH: any;
   convertedEntrySH: any;
   totalValueUsd: number = 0;
@@ -97,7 +98,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     this.showLoading = true;
     // await this.getPreVendasReport();
     await this.setPageInfo()
-    if (this.userInfo?.email === this.u1a || this.userInfo?.email === this.u2a || this.userInfo?.email === this.u3a || this.userInfo?.email === this.u4a || this.userInfo?.email === this.u5a) {
+    if (this.userInfo?.email === this.u1a || this.userInfo?.email === this.u2a || this.userInfo?.email === this.u3a || this.userInfo?.email === this.u4a || this.userInfo?.email === this.u5a || this.userInfo?.email === this.u6a) {
 
       let resultSH = await this.authService.getCotationSHUSD()
       this.cotacaoValoresSHUSD = resultSH?.data?.quote[0].price?.toFixed(5);
@@ -134,7 +135,6 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       this.excelList = [
         { name: "Todos", code: "todos" },
         { name: "Pagamento Pendente", code: "pagamento-pendente" },
-        { name: "Á Vencer", code: "vencendo" },
         { name: "Aprovado", code: 'aprovado' },
         { name: "Atualizados", code: 'atualizado' },
         { name: "Resgatados", code: 'resgatado' },
@@ -226,24 +226,23 @@ export class AdministracaoComponent implements OnInit, OnChanges {
     let resgatados: any = await this.authService.getAllContractResgate();
     this.contratosResgatados = resgatados.docs.map((d: any) => ({ contract_id: d.id, path: d.ref.path, ...d.data() }));
 
-
     this.contractsDataReport.map(async (d: any) => {
       if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
         d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_incio: d.data_incio })
+        await this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_incio: d.data_incio })
       }
 
       if (d?.uid && d?.contract_id && d.data_compra.seconds) {
         console.log(d)
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_compra: d.data_compra })
+        await this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_compra: d.data_compra })
       }
 
       if (d?.uid && d?.contract_id && d.data_fim.seconds) {
         console.log(d)
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
-        await this.authService.changeContractStatus(d.path, { data_fim: d.data_fim })
+        await this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_fim: d.data_fim })
       }
       delete d.compensacao_stakholders;
       delete d.bonificacao;
@@ -279,7 +278,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
         if (dataInicio > today && (d.status === 'aprovado' || d.status === 'atualizado')) {
           console.log(d)
 
-        // this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_incio: d.data_compra, data_fim: dataFimNova, path: '', pathc: '' })
+          // this.authService.changeContractComprovantes(d.uid, d.contract_id, { data_incio: d.data_compra, data_fim: dataFimNova, path: '', pathc: '' })
 
         }
 
@@ -295,22 +294,22 @@ export class AdministracaoComponent implements OnInit, OnChanges {
       }
     });
     this.updatedContracts.map((d: any) => {
-      if (d?.pathc && d.data_incio.seconds) {
+      if (d?.uid && d?.contract_id && d.data_incio.seconds) {
         console.log(d)
         d.data_incio = new Date(d.data_incio?.seconds * 1000).toUTCString();
-        this.authService.changeContractStatus(d.pathc, { data_incio: d.data_incio })
+        this.authService.changeContractPendente(d.uid, d.contract_id, { data_incio: d.data_incio })
       }
 
-      if (d?.pathc && d.data_compra.seconds) {
+      if (d?.uid && d?.contract_id && d.data_compra.seconds) {
         console.log(d)
         d.data_compra = new Date(d.data_compra?.seconds * 1000).toUTCString();
-        this.authService.changeContractStatus(d.pathc, { data_compra: d.data_compra })
+        this.authService.changeContractPendente(d.uid, d.contract_id, { data_compra: d.data_compra })
       }
 
-      if (d?.pathc && d.data_fim.seconds) {
+      if (d?.uid && d?.contract_id && d.data_fim.seconds) {
         console.log(d)
         d.data_fim = new Date(d.data_fim?.seconds * 1000).toUTCString();
-        this.authService.changeContractStatus(d.pathc, { data_fim: d.data_fim })
+        this.authService.changeContractPendente(d.uid, d.contract_id, { data_fim: d.data_fim })
       }
 
       if (d.status === 'pago' || d.status === 'pago-resgate' || d.status === 'pago-atualizacao') {
@@ -541,7 +540,6 @@ export class AdministracaoComponent implements OnInit, OnChanges {
 
       if (dataCompraNew < dataInicio && d.status === 'pago') {
         this.authService.changeContractComprovantes(d.uid, d.contract_id, { status: 'atualizado' })
-        console.log('ok')
       }
 
       var calculoMoeda, taxaDescontoAtualizacao, inputQuantityUsd, calculoPercentual, valueDifference, totalValue, percentual = 0
@@ -647,12 +645,9 @@ export class AdministracaoComponent implements OnInit, OnChanges {
           dataToExcel = this.contractsDataReport;
         } else if (periodo !== 'todos' && path === 'todos') {
           dataToExcel = this.contractsDataReport.filter((d: any) => +d.periodo === +periodo);
-        } else if (periodo === 'todos' && path !== 'todos' && path !== 'vencendo') {
-          dataToExcel = this.contractsDataReport.filter((d: any) => d.path === path);
-        } else if (periodo === 'todos' && path === 'vencendo') {
-          dataToExcel = this.contratosVencendo;
-        } else if (periodo !== 'todos' && path === 'vencendo') {
-          dataToExcel = this.contratosVencendo.filter((d: any) => d.vencendo === true && +d.periodo === +periodo);
+        } else if (periodo === 'todos' && path !== 'todos') {
+          dataToExcel = this.contractsDataReport.filter((d: any) => d.status === path);
+          console.log(path, dataToExcel)
         } else {
           dataToExcel = this.contractsDataReport.filter((d: any) => d.status === path && +d.periodo === +periodo && (d.status !== 'pago' || d.status !== 'pago-cancelamento'))
         }

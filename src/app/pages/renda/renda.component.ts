@@ -66,7 +66,7 @@ export class RendaComponent implements OnInit, OnChanges {
     this.cotacaoValoresSHUSD = resultSH?.data?.quote[0].price?.toFixed(5);
     let resultBNB = await this.rendaService.getCotationBNBUSD()
     this.cotacaoValoresBNBUSD = resultBNB?.result?.ethusd;
-    // await this.adjustOldContracts()
+    await this.adjustOldContracts()
   }
 
   ngOnChanges() {
@@ -130,9 +130,9 @@ export class RendaComponent implements OnInit, OnChanges {
         let calculoMoeda = this.inputQuantityTokens * this.cotacaoValoresBNBUSD;
 
         // if (this.approvedContracts?.length > 0) {
-          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
-          this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
-          this.inputQuantityUsd = +calculoMoeda;
+        calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+        this.taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+        this.inputQuantityUsd = +calculoMoeda;
         // }
 
         let percentual = calculoMoeda * this.bonusPercentPeriodicity;
@@ -596,31 +596,64 @@ export class RendaComponent implements OnInit, OnChanges {
     });
   }
 
-  async adjustOldContracts() {
-    this.reportContractsData.map(async (d: any) => {
-      if ((d.status === 'aprovado' || d.status === 'atualizado') && d.uid && d.id && d.data_incio && d.data_fim && d.data_compra) {
-        let dataInicio = new Date(d.data_incio);
-        let dataFim = new Date(d.data_fim);
-        let dataHoje = new Date();
-        console.log('oi', dataInicio, dataFim, dataHoje)
-        if (dataFim < dataHoje) {
-          console.log('oi')
-          let novaDataFim = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo));
-          console.log(dataFim, novaDataFim, dataHoje)
-          await this.authService.changeContractComprovantes(d.uid, d.id, { data_fim_antes_att: d.data_fim, data_incio: dataFim, data_fim: novaDataFim, status: 'atualizado' })
-          await this.authService.backupEditedContract(d.uid.trim(), d)
-          await this.getReportFromContracts()
+  adjustOldContracts() {
+    // window.alert("Atualizando Contratos");
+    this.reportContractsData.map((d: any) => {
+      let dataInicio = new Date(d.data_incio)
+      let dataFim = new Date(d.data_fim)
+      let dataHoje = new Date()
+      let dataCompra = new Date(d.data_compra)
+      let dataCompraNew = new Date(new Date(d.data_compra).setDate(new Date(d.data_compra).getDate() + 3));
+
+      var calculoMoeda, taxaDescontoAtualizacao, inputQuantityUsd, calculoPercentual, valueDifference, totalValue, percentual = 0
+      if (dataFim < dataHoje && (d.status === 'atualizado' || d.status === 'aprovado' && d.valor_quantidade)) {
+        if (d.modalidade === 'Stakholders' && d.valor_quantidade) {
+          this.authService.backupContract(d.uid, d)
+
+          calculoMoeda = d.valor_quantidade;
+
+          // if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          inputQuantityUsd = +calculoMoeda
+          // }
+
+          percentual = d.total_pelo_aluguel;
+          calculoPercentual = percentual + calculoMoeda;
+          // VALOR EM DOLAR
+          inputQuantityUsd = calculoMoeda;
+          // DIFERENÇA A PAGAR
+          d.total_pelo_aluguel = calculoPercentual - calculoMoeda;
+          // VALOR TOTAL
+          d.total_recebiveis_aluguel = calculoPercentual;
         }
+        if (d.modalidade === 'Bnb' && d.valor_quantidade) {
+          this.authService.backupContract(d.uid, d)
+
+          calculoMoeda = d.valor_quantidade;
+          // if (this.approvedContracts?.length > 0) {
+          calculoMoeda = (+calculoMoeda - (+calculoMoeda * 0.06));
+          taxaDescontoAtualizacao = (+calculoMoeda * 0.06);
+          inputQuantityUsd = +calculoMoeda;
+          // }
+
+          percentual = d.total_pelo_aluguel;
+          calculoPercentual = percentual + calculoMoeda;
+          // VALOR EM DOLAR
+          inputQuantityUsd = calculoMoeda;
+          // DIFERENÇA A PAGAR
+          d.total_pelo_aluguel = calculoPercentual - calculoMoeda;
+          // VALOR TOTAL
+          d.total_recebiveis_aluguel = calculoPercentual;
+        }
+
+
+        let dataInicioNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate())).toUTCString();
+        let dataFimNova = new Date(new Date(d.data_fim).setDate(new Date(d.data_fim).getDate() + +d.periodo)).toUTCString();
+        console.log(d, dataInicioNova, dataFimNova)
+        this.authService.changeContractComprovantes(d.uid, d.contract_id, { total_pelo_aluguel: d.total_pelo_aluguel, total_recebiveis_aluguel: d.total_recebiveis_aluguel, path: '', pathc: '', data_incio: dataInicioNova, data_fim: dataFimNova, status: 'atualizado' })
+        this.authService.addDocumentTo(d.uid, d.contract_id, d, 'atualizacao')
       }
     })
-  }
-
-  openSupport() {
-    let today = new Date()
-    if (today.getDay() !== 6 && today.getDay() !== 0) {
-      window.open('https://t.me/gqqdev', '_blank');
-    } else {
-      this.msgs = [{ severity: 'info', summary: 'Informação', detail: 'Atendimento disponivel de Segunda a Sexta-feira, entre em contato novamente mais tarde.' }];
-    }
   }
 }
