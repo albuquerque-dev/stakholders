@@ -1000,7 +1000,7 @@ export class AdministracaoComponent implements OnInit, OnChanges {
   async adjustContractField(param: any, field: any, contract: any) {
     this.showLoading = true;
     try {
-      await this.authService.changeContractStatus(contract.path, { [param]: field });
+      await this.authService.changeContractComprovantes(contract.uid, contract.contract_id, { [param]: field });
       await this.authService.backupEditedContract(contract.uid, contract);
     } catch (error) {
       window.alert('Erro ao atualizar contrato')

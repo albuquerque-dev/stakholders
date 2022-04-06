@@ -230,13 +230,13 @@
                   <tr
                     *ngIf="!contract.status?.includes('cancelado') && !contract.status?.includes('resgatado') && !contract.status?.includes('pago') && !contract.status?.includes('solicitado-cancelamento')  && !contract.status?.includes('pago') ">
                     <td class="justify-content-center">
-                      <a class="mx-2 d-flex flex-column"
+                      <!-- <a class="mx-2 d-flex flex-column"
                         title="Disponivel 7 dias antes do fim do contrato, até a data do termino"
                         style="text-decoration: none;"
                         (click)="verifyContractPeriod(contract) ? updateContract(contract) : ''"
                         [ngClass]="verifyContractPeriod(contract) ? 'btn-alugar-enabled' : 'btn-alugar-disabled'">
                         <img src="../../../assets/atualizar.png" style="width: auto; height: 50px;">
-                      </a>
+                      </a> -->
                       <a class="mx-2"
                         (click)="(contract.status?.includes('cancelado') || contract.status?.includes('resgatado') ) ? '' : goToResgate(contract)"
                         [ngClass]="(contract.status?.includes('cancelado') || contract.status?.includes('resgatado') )  ? 'btn-alugar-disabled' : 'btn-alugar-enabled'">

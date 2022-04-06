@@ -66,7 +66,7 @@ export class RendaComponent implements OnInit, OnChanges {
     this.cotacaoValoresSHUSD = resultSH?.data?.quote[0].price?.toFixed(5);
     let resultBNB = await this.rendaService.getCotationBNBUSD()
     this.cotacaoValoresBNBUSD = resultBNB?.result?.ethusd;
-    await this.adjustOldContracts()
+    // await this.adjustOldContracts()
   }
 
   ngOnChanges() {
